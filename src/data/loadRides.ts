@@ -2,7 +2,7 @@ import { parseCsv } from '../utils/csv'
 import type { Ride } from '../types/ride'
 
 const HEADER_ALIASES: Record<keyof Omit<Ride, 'id'>, string[]> = {
-  carNumber: ['car number', 'car #', 'car num', 'car'],
+  carNumber: ['car number', 'car #', 'car num', 'car', 'number'],
   line: ['line', 'subway line', 'route'],
   carType: ['car type', 'cartype', 'type'],
   timestamp: [
@@ -13,6 +13,7 @@ const HEADER_ALIASES: Record<keyof Omit<Ride, 'id'>, string[]> = {
     'timestamp',
     'date logged',
     'date',
+    'ridden date',
   ],
 }
 
@@ -33,7 +34,26 @@ function buildColumnIndex(headerRow: string[]): Partial<Record<keyof Omit<Ride, 
   return index
 }
 
+// Matches Airtable's typical US export format: "11/3/2024 2:27pm" — no
+// space before am/pm, which `new Date(...)` fails to parse natively.
+const US_DATETIME_RE =
+  /^(\d{1,2})\/(\d{1,2})\/(\d{2,4})[,\s]+(\d{1,2}):(\d{2})\s*([ap]m)?$/i
+
 function parseTimestamp(raw: string): Date | null {
+  const match = raw.match(US_DATETIME_RE)
+  if (match) {
+    const [, month, day, yearRaw, hourRaw, minute, meridiem] = match
+    let year = Number(yearRaw)
+    if (year < 100) year += 2000
+    let hour = Number(hourRaw)
+    if (meridiem) {
+      const isPm = meridiem.toLowerCase() === 'pm'
+      hour = (hour % 12) + (isPm ? 12 : 0)
+    }
+    const date = new Date(year, Number(month) - 1, Number(day), hour, Number(minute))
+    if (!Number.isNaN(date.getTime())) return date
+  }
+
   const direct = new Date(raw)
   if (!Number.isNaN(direct.getTime())) return direct
   return null
