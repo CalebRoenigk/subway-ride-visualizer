@@ -1,0 +1,142 @@
+.rides-by-line-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.date-range-control,
+.table-toggle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: transparent;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.table-toggle:hover {
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.rides-by-line-chart {
+  position: relative;
+  width: 100%;
+}
+
+.gridline {
+  stroke: var(--gridline);
+  stroke-width: 1;
+}
+
+.baseline {
+  stroke: var(--baseline);
+  stroke-width: 1;
+}
+
+.axis-label {
+  fill: var(--text-muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.y-axis-label {
+  text-anchor: end;
+  dominant-baseline: middle;
+}
+
+.x-axis-label {
+  text-anchor: middle;
+}
+
+.x-axis-month {
+  text-anchor: middle;
+  font-weight: 600;
+}
+
+.hover-band {
+  fill: var(--text-primary);
+  opacity: 0.04;
+}
+
+.rides-by-line-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: var(--space-4) 0;
+}
+
+.rides-by-line-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+}
+
+.chart-tooltip {
+  position: absolute;
+  top: 4px;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--surface-1);
+  border-radius: 8px;
+  padding: var(--space-2) var(--space-3);
+  font-size: 12px;
+  pointer-events: none;
+  min-width: 96px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.chart-tooltip-date {
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.chart-tooltip-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.chart-tooltip-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.chart-tooltip-total {
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 4px;
+  margin-top: 2px;
+}
+
+.rides-table-wrap {
+  overflow-x: auto;
+}
+
+.rides-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 13px;
+}
+
+.rides-table th,
+.rides-table td {
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: right;
+}
+
+.rides-table th:first-child,
+.rides-table td:first-child {
+  text-align: left;
+}

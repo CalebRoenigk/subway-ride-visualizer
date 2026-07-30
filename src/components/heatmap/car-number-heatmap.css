@@ -1,0 +1,131 @@
+.heatmap {
+  display: flex;
+  flex-direction: column;
+}
+
+.heatmap-header {
+  display: flex;
+  margin-bottom: var(--space-2);
+}
+
+.heatmap-row-label {
+  width: 24px;
+  flex-shrink: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.heatmap-header-track {
+  position: relative;
+  flex: 1;
+  height: 14px;
+}
+
+.heatmap-col-label {
+  position: absolute;
+  top: 0;
+  font-size: 11px;
+  color: var(--text-muted);
+  transform: translateX(-50%);
+  font-variant-numeric: tabular-nums;
+}
+
+.heatmap-col-label--end {
+  transform: translateX(-100%);
+}
+
+.heatmap-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 3px;
+}
+
+.heatmap-row-track {
+  position: relative;
+  flex: 1;
+  height: 14px;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--gridline) 0,
+    var(--gridline) 1px,
+    transparent 1px,
+    transparent 6px
+  );
+  border-radius: 2px;
+}
+
+.heatmap-mark {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  height: 100%;
+  border-radius: 1px;
+  transform: translateX(-50%);
+  cursor: default;
+}
+
+.heatmap-mark.is-left-edge {
+  transform: translateX(0);
+}
+
+.heatmap-mark.is-right-edge {
+  transform: translateX(-100%);
+}
+
+.heatmap-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--surface-1);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 10;
+}
+
+.heatmap-mark.is-left-edge .heatmap-tooltip {
+  left: 0;
+  transform: none;
+}
+
+.heatmap-mark.is-right-edge .heatmap-tooltip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.heatmap-mark:hover .heatmap-tooltip,
+.heatmap-mark:focus-visible .heatmap-tooltip {
+  opacity: 1;
+}
+
+.heatmap-tooltip-car {
+  font-weight: 600;
+}
+
+.heatmap-tooltip-muted {
+  color: var(--text-muted);
+}
+
+.heatmap-footer {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.heatmap-table-link {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.heatmap-table-link:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}

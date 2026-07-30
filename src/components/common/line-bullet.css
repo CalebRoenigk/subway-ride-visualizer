@@ -1,0 +1,28 @@
+.line-bullet {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-weight: 700;
+  line-height: 1;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+}
+
+.line-bullet--sm {
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+}
+
+.line-bullet--md {
+  width: 24px;
+  height: 24px;
+  font-size: 13px;
+}
+
+.line-bullet--lg {
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+}
