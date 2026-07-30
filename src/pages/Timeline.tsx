@@ -123,7 +123,15 @@ export function Timeline() {
         />
       </Card>
 
-      <CarNumberHeatmap rides={periodRides} meta={TIME_PERIOD_LABELS[period]} />
+      <CarNumberHeatmap
+        rides={periodRides}
+        meta={TIME_PERIOD_LABELS[period]}
+        colorOf={(mark) =>
+          assignment.colorOf(
+            assignment.remap(colorBy === 'line' ? mark.line : mark.carType),
+          )
+        }
+      />
 
       <StatsRow stats={stats} />
     </div>

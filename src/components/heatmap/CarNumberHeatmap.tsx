@@ -19,9 +19,11 @@ interface PlacedMark extends CarAggregate {
 export function CarNumberHeatmap({
   rides,
   meta = 'All time',
+  colorOf,
 }: {
   rides: Ride[]
   meta?: string
+  colorOf?: (mark: CarAggregate) => string
 }) {
   const isDark = useIsDarkMode()
 
@@ -58,6 +60,9 @@ export function CarNumberHeatmap({
     return max
   }, [rows])
 
+  const getColor =
+    colorOf ?? ((mark: CarAggregate) => getRideCountColor(mark.count, maxCount, isDark))
+
   return (
     <Card title="Car Numbers" meta={meta}>
       <div
@@ -90,12 +95,7 @@ export function CarNumberHeatmap({
             </div>
             <div className="heatmap-row-track">
               {(rows.get(digit) ?? []).map((mark) => (
-                <HeatmapMark
-                  key={mark.carNumber}
-                  mark={mark}
-                  maxCount={maxCount}
-                  isDark={isDark}
-                />
+                <HeatmapMark key={mark.carNumber} mark={mark} color={getColor(mark)} />
               ))}
             </div>
           </div>
@@ -103,18 +103,20 @@ export function CarNumberHeatmap({
       </div>
 
       <div className="heatmap-footer">
-        <div className="heatmap-scale">
-          <span className="heatmap-scale-label">1 ride</span>
-          <span
-            className="heatmap-scale-bar"
-            style={{
-              background: `linear-gradient(to right, ${getRideCountScaleStops(isDark).join(', ')})`,
-            }}
-          />
-          <span className="heatmap-scale-label">
-            {maxCount} {maxCount === 1 ? 'ride' : 'rides'}
-          </span>
-        </div>
+        {!colorOf && (
+          <div className="heatmap-scale">
+            <span className="heatmap-scale-label">1 ride</span>
+            <span
+              className="heatmap-scale-bar"
+              style={{
+                background: `linear-gradient(to right, ${getRideCountScaleStops(isDark).join(', ')})`,
+              }}
+            />
+            <span className="heatmap-scale-label">
+              {maxCount} {maxCount === 1 ? 'ride' : 'rides'}
+            </span>
+          </div>
+        )}
         <Link to="/lookup" className="heatmap-table-link">
           View full car list →
         </Link>
@@ -123,16 +125,7 @@ export function CarNumberHeatmap({
   )
 }
 
-function HeatmapMark({
-  mark,
-  maxCount,
-  isDark,
-}: {
-  mark: PlacedMark
-  maxCount: number
-  isDark: boolean
-}) {
-  const color = getRideCountColor(mark.count, maxCount, isDark)
+function HeatmapMark({ mark, color }: { mark: PlacedMark; color: string }) {
   const pct = (mark.col / (COLS - 1)) * 100
   const edgeClass = pct < 5 ? 'is-left-edge' : pct > 95 ? 'is-right-edge' : ''
 
@@ -146,7 +139,9 @@ function HeatmapMark({
         <div className="heatmap-tooltip-car">
           Car {mark.carNumber} · {mark.count} {mark.count === 1 ? 'ride' : 'rides'}
         </div>
-        <div>{mark.line || 'Unknown'} line</div>
+        <div>
+          {mark.line || 'Unknown'} line · {mark.carType || 'Unknown'}
+        </div>
         <div className="heatmap-tooltip-muted">
           Last ridden {formatRideDate(mark.lastRidden)}
         </div>
