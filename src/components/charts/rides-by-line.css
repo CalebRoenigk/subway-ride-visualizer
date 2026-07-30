@@ -4,8 +4,7 @@
   gap: var(--space-3);
 }
 
-.date-range-control,
-.table-toggle {
+.date-range-control {
   font-size: 13px;
   color: var(--text-secondary);
   border: 1px solid var(--border);
@@ -13,11 +12,6 @@
   background: transparent;
   padding: 4px 8px;
   cursor: pointer;
-}
-
-.table-toggle:hover {
-  color: var(--text-primary);
-  border-color: var(--border-strong);
 }
 
 .rides-by-line-chart {
@@ -143,26 +137,4 @@
   gap: var(--space-3);
   border-top: 1px solid rgba(255, 255, 255, 0.2);
   padding-top: 6px;
-}
-
-.rides-table-wrap {
-  overflow-x: auto;
-}
-
-.rides-table {
-  border-collapse: collapse;
-  width: 100%;
-  font-size: 13px;
-}
-
-.rides-table th,
-.rides-table td {
-  padding: 6px 10px;
-  border-bottom: 1px solid var(--border);
-  text-align: right;
-}
-
-.rides-table th:first-child,
-.rides-table td:first-child {
-  text-align: left;
 }

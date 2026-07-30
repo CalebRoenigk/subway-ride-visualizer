@@ -54,7 +54,6 @@ interface HoverInfo {
 
 export function RidesByLineChart({ rides }: { rides: Ride[] }) {
   const [preset, setPreset] = useState<RangePreset>('30d')
-  const [showTable, setShowTable] = useState(false)
   const [hover, setHover] = useState<HoverInfo | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const width = useElementWidth(containerRef, 640)
@@ -113,22 +112,12 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
       title="Rides by Line"
       meta={
         <div className="rides-by-line-meta">
-          <button
-            type="button"
-            className="table-toggle"
-            onClick={() => setShowTable((v) => !v)}
-            aria-pressed={showTable}
-          >
-            {showTable ? 'View chart' : 'View as table'}
-          </button>
           <DateRangeControl value={preset} onChange={setPreset} />
         </div>
       }
     >
       {buckets.every((b) => b.total === 0) ? (
         <div className="rides-by-line-empty">No rides in this range.</div>
-      ) : showTable ? (
-        <RidesTable buckets={buckets} lines={activeLines} />
       ) : (
         <div className="rides-by-line-chart" ref={containerRef}>
           <svg
@@ -292,7 +281,7 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
         </div>
       )}
 
-      {activeLines.length > 0 && !showTable && (
+      {activeLines.length > 0 && (
         <div className="rides-by-line-legend">
           {activeLines.map((lineId) => (
             <div key={lineId} className="legend-item">
@@ -352,36 +341,6 @@ function ChartTooltip({
         <span>Total</span>
         <span className="chart-tooltip-value">{bucket.total}</span>
       </div>
-    </div>
-  )
-}
-
-function RidesTable({ buckets, lines }: { buckets: DayBucket[]; lines: string[] }) {
-  const nonEmpty = buckets.filter((b) => b.total > 0)
-  return (
-    <div className="rides-table-wrap">
-      <table className="rides-table tabular">
-        <thead>
-          <tr>
-            <th>Date</th>
-            {lines.map((line) => (
-              <th key={line}>{line}</th>
-            ))}
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {nonEmpty.map((bucket) => (
-            <tr key={bucket.date.toISOString()}>
-              <td>{bucket.date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</td>
-              {lines.map((line) => (
-                <td key={line}>{bucket.counts.get(line) ?? 0}</td>
-              ))}
-              <td>{bucket.total}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
     </div>
   )
 }
