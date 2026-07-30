@@ -14,11 +14,11 @@ export function Overview() {
   const lastUpdated = rides[0]?.timestamp
 
   if (loading) {
-    return <div className="overview-loading">Loading rides…</div>
+    return <div className="page-loading">Loading rides…</div>
   }
 
   return (
-    <div className="overview">
+    <div className="page-stack">
       {isSample && (
         <div className="sample-banner">
           Showing sample data. Export your Airtable base to CSV and save it

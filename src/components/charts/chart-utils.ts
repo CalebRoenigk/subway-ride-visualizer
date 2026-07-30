@@ -11,6 +11,7 @@ export function bucketRidesByDay(
   rides: Ride[],
   start: Date,
   end: Date,
+  getCategory: (ride: Ride) => string,
 ): DayBucket[] {
   const from = startOfDay(start)
   const to = startOfDay(end)
@@ -24,8 +25,8 @@ export function bucketRidesByDay(
     const key = startOfDay(ride.timestamp).getTime()
     const bucket = buckets.get(key)
     if (!bucket) continue
-    const line = ride.line || 'Unknown'
-    bucket.counts.set(line, (bucket.counts.get(line) ?? 0) + 1)
+    const category = getCategory(ride) || 'Unknown'
+    bucket.counts.set(category, (bucket.counts.get(category) ?? 0) + 1)
     bucket.total += 1
   }
 

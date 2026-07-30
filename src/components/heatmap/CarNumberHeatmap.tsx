@@ -16,7 +16,13 @@ interface PlacedMark extends CarAggregate {
   col: number
 }
 
-export function CarNumberHeatmap({ rides }: { rides: Ride[] }) {
+export function CarNumberHeatmap({
+  rides,
+  meta = 'All time',
+}: {
+  rides: Ride[]
+  meta?: string
+}) {
   const isDark = useIsDarkMode()
 
   const rows = useMemo(() => {
@@ -53,7 +59,7 @@ export function CarNumberHeatmap({ rides }: { rides: Ride[] }) {
   }, [rows])
 
   return (
-    <Card title="Car Numbers" meta="All time">
+    <Card title="Car Numbers" meta={meta}>
       <div
         className="heatmap"
         role="img"
