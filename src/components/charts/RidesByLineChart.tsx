@@ -49,6 +49,7 @@ function roundedTopPath(
 interface HoverInfo {
   index: number
   x: number
+  y: number
 }
 
 export function RidesByLineChart({ rides }: { rides: Ride[] }) {
@@ -99,6 +100,13 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
   const svgHeight = MARGIN.top + PLOT_HEIGHT + MARGIN.bottom
 
   const hoveredBucket = hover ? buckets[hover.index] : null
+
+  function updateHoverFromPointer(index: number, e: { clientX: number; clientY: number }) {
+    const el = containerRef.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    setHover({ index, x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }
 
   return (
     <Card
@@ -168,6 +176,7 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
                   .filter((s) => s.value > 0)
 
                 const isHovered = hover?.index === i
+                const hasData = bucket.total > 0
 
                 return (
                   <g key={bucket.date.toISOString()}>
@@ -211,14 +220,32 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
                       width={dayWidth}
                       height={PLOT_HEIGHT}
                       fill="transparent"
-                      tabIndex={0}
-                      role="img"
-                      aria-label={`${bucket.date.toDateString()}: ${bucket.total} rides`}
-                      onMouseEnter={() =>
-                        setHover({ index: i, x: slotX + dayWidth / 2 })
+                      tabIndex={hasData ? 0 : undefined}
+                      role={hasData ? 'img' : undefined}
+                      aria-label={
+                        hasData
+                          ? `${bucket.date.toDateString()}: ${bucket.total} rides`
+                          : undefined
                       }
-                      onFocus={() =>
-                        setHover({ index: i, x: slotX + dayWidth / 2 })
+                      onMouseEnter={
+                        hasData
+                          ? (e) => updateHoverFromPointer(i, e)
+                          : () => setHover(null)
+                      }
+                      onMouseMove={
+                        hasData
+                          ? (e) => updateHoverFromPointer(i, e)
+                          : undefined
+                      }
+                      onFocus={
+                        hasData
+                          ? () =>
+                              setHover({
+                                index: i,
+                                x: slotX + dayWidth / 2,
+                                y: yScale(bucket.total),
+                              })
+                          : undefined
                       }
                     />
                   </g>
@@ -253,11 +280,13 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
             </g>
           </svg>
 
-          {hoveredBucket && (
+          {hoveredBucket && hover && (
             <ChartTooltip
               bucket={hoveredBucket}
               lines={activeLines}
-              x={MARGIN.left + hover!.x}
+              x={hover.x}
+              y={hover.y}
+              containerWidth={width}
             />
           )}
         </div>
@@ -280,20 +309,28 @@ function ChartTooltip({
   bucket,
   lines,
   x,
+  y,
+  containerWidth,
 }: {
   bucket: DayBucket
   lines: string[]
   x: number
+  y: number
+  containerWidth: number
 }) {
   const rows = lines
     .map((lineId) => ({ lineId, count: bucket.counts.get(lineId) ?? 0 }))
     .filter((r) => r.count > 0)
     .sort((a, b) => b.count - a.count)
 
+  const pct = containerWidth > 0 ? x / containerWidth : 0.5
+  const hAnchor = pct < 0.15 ? 'is-left-edge' : pct > 0.85 ? 'is-right-edge' : ''
+  const vAnchor = y < 110 ? 'is-top-edge' : ''
+
   return (
     <div
-      className="chart-tooltip"
-      style={{ left: x }}
+      className={`chart-tooltip ${hAnchor} ${vAnchor}`}
+      style={{ left: x, top: y }}
       role="tooltip"
     >
       <div className="chart-tooltip-date">
@@ -303,13 +340,15 @@ function ChartTooltip({
           day: 'numeric',
         })}
       </div>
-      {rows.map((row) => (
-        <div key={row.lineId} className="chart-tooltip-row">
-          <LineBullet line={row.lineId} size="sm" />
-          <span className="chart-tooltip-value">{row.count}</span>
-        </div>
-      ))}
-      <div className="chart-tooltip-row chart-tooltip-total">
+      <div className="chart-tooltip-chips">
+        {rows.map((row) => (
+          <div key={row.lineId} className="chart-tooltip-chip">
+            <LineBullet line={row.lineId} size="sm" />
+            <span className="chart-tooltip-value">{row.count}</span>
+          </div>
+        ))}
+      </div>
+      <div className="chart-tooltip-total">
         <span>Total</span>
         <span className="chart-tooltip-value">{bucket.total}</span>
       </div>
