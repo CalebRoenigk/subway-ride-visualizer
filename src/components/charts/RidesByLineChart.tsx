@@ -19,6 +19,16 @@ const getLine = (ride: Ride) => ride.line || 'Unknown'
 
 export function RidesByLineChart({ rides }: { rides: Ride[] }) {
   const [preset, setPreset] = useState<RangePreset>('30d')
+  const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set())
+
+  function toggleLine(lineId: string) {
+    setHiddenLines((prev) => {
+      const next = new Set(prev)
+      if (next.has(lineId)) next.delete(lineId)
+      else next.add(lineId)
+      return next
+    })
+  }
 
   const earliest = useMemo(
     () =>
@@ -47,6 +57,17 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
     return LINES.filter((l) => present.has(l.id)).map((l) => l.id)
   }, [buckets])
 
+  const visibleLines = useMemo(
+    () => activeLines.filter((id) => !hiddenLines.has(id)),
+    [activeLines, hiddenLines],
+  )
+
+  const allHidden = activeLines.length > 0 && activeLines.every((id) => hiddenLines.has(id))
+
+  function toggleAll() {
+    setHiddenLines(allHidden ? new Set() : new Set(activeLines))
+  }
+
   return (
     <Card
       title="Rides by Line"
@@ -58,7 +79,7 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
     >
       <StackedDayBarChart
         buckets={buckets}
-        categories={activeLines}
+        categories={visibleLines}
         colorOf={(id) => getLineMeta(id).color}
         renderTooltipChip={(id, count) => (
           <>
@@ -71,11 +92,28 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
 
       {activeLines.length > 0 && (
         <div className="rides-by-line-legend">
-          {activeLines.map((lineId) => (
-            <div key={lineId} className="legend-item">
-              <LineBullet line={lineId} size="sm" />
-            </div>
-          ))}
+          <button
+            type="button"
+            className="legend-toggle-all"
+            onClick={toggleAll}
+          >
+            {allHidden ? 'Show All' : 'Hide All'}
+          </button>
+          {activeLines.map((lineId) => {
+            const isHidden = hiddenLines.has(lineId)
+            return (
+              <button
+                key={lineId}
+                type="button"
+                className="legend-item legend-item--toggle"
+                aria-pressed={!isHidden}
+                title={`${isHidden ? 'Show' : 'Hide'} ${lineId} line`}
+                onClick={() => toggleLine(lineId)}
+              >
+                <LineBullet line={lineId} size="sm" dimmed={isHidden} />
+              </button>
+            )
+          })}
         </div>
       )}
     </Card>

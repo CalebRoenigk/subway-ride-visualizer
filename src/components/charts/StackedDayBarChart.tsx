@@ -19,6 +19,19 @@ interface HoverInfo {
   y: number
 }
 
+// A category can be omitted from `categories` (legend toggled off) without
+// being removed from the bucket data itself, so the visible total — used for
+// y-axis scaling, hover totals, and aria-labels — has to be recomputed from
+// only the categories currently being rendered rather than trusting
+// `bucket.total`, which always reflects every category.
+function visibleTotal(bucket: DayBucket, categories: string[]): number {
+  let total = 0
+  for (const id of categories) {
+    total += bucket.counts.get(id) ?? 0
+  }
+  return total
+}
+
 interface StackedDayBarChartProps {
   buckets: DayBucket[]
   categories: string[]
@@ -40,7 +53,7 @@ export function StackedDayBarChart({
   const containerRef = useRef<HTMLDivElement>(null)
   const width = useElementWidth(containerRef, 640)
 
-  const maxTotal = Math.max(0, ...buckets.map((b) => b.total))
+  const maxTotal = Math.max(0, ...buckets.map((b) => visibleTotal(b, categories)))
   const { ticks, niceMax } = computeYTicks(maxTotal)
 
   const plotWidth = Math.max(width - MARGIN.left - MARGIN.right, 0)
@@ -115,7 +128,8 @@ export function StackedDayBarChart({
               .filter((s) => s.value > 0)
 
             const isHovered = hover?.index === i
-            const hasData = bucket.total > 0
+            const bucketTotal = visibleTotal(bucket, categories)
+            const hasData = bucketTotal > 0
 
             return (
               <g key={bucket.date.toISOString()}>
@@ -163,7 +177,7 @@ export function StackedDayBarChart({
                   role={hasData ? 'img' : undefined}
                   aria-label={
                     hasData
-                      ? `${bucket.date.toDateString()}: ${bucket.total} rides`
+                      ? `${bucket.date.toDateString()}: ${bucketTotal} rides`
                       : undefined
                   }
                   onMouseEnter={
@@ -180,7 +194,7 @@ export function StackedDayBarChart({
                           setHover({
                             index: i,
                             x: slotX + dayWidth / 2,
-                            y: yScale(bucket.total),
+                            y: yScale(bucketTotal),
                           })
                       : undefined
                   }
@@ -255,6 +269,7 @@ function ChartTooltip({
     .map((id) => ({ id, count: bucket.counts.get(id) ?? 0 }))
     .filter((r) => r.count > 0)
     .sort((a, b) => b.count - a.count)
+  const total = rows.reduce((sum, r) => sum + r.count, 0)
 
   const pct = containerWidth > 0 ? x / containerWidth : 0.5
   const hAnchor = pct < 0.15 ? 'is-left-edge' : pct > 0.85 ? 'is-right-edge' : ''
@@ -282,7 +297,7 @@ function ChartTooltip({
       </div>
       <div className="chart-tooltip-total">
         <span>Total</span>
-        <span className="chart-tooltip-value">{bucket.total}</span>
+        <span className="chart-tooltip-value">{total}</span>
       </div>
     </div>
   )
