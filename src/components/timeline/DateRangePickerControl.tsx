@@ -33,6 +33,27 @@ function buildMonthGrid(year: number, month: number): (Date | null)[][] {
   return weeks
 }
 
+function CalendarIcon() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="4" width="18" height="18" rx="3" />
+      <line x1="16" y1="2" x2="16" y2="6" />
+      <line x1="8" y1="2" x2="8" y2="6" />
+      <line x1="3" y1="10" x2="21" y2="10" />
+    </svg>
+  )
+}
+
 export function DateRangePickerControl({
   preset,
   start,
@@ -139,13 +160,16 @@ export function DateRangePickerControl({
     <div className="range-picker" ref={containerRef}>
       <button
         type="button"
-        className="range-picker-trigger"
+        className={`range-picker-trigger ${open ? 'is-open' : ''}`}
         onClick={() => (open ? setOpen(false) : openPanel())}
       >
+        <span className="range-picker-trigger-icon">
+          <CalendarIcon />
+        </span>
         <span className="range-picker-trigger-label">
           {preset === 'custom' ? formatRangeLabel(start, end) : RANGE_PRESET_LABELS[preset]}
         </span>
-        <span className="range-picker-trigger-chevron" aria-hidden="true">
+        <span className={`range-picker-trigger-chevron ${open ? 'is-open' : ''}`} aria-hidden="true">
           ⌄
         </span>
       </button>
@@ -175,6 +199,9 @@ export function DateRangePickerControl({
                   onChange={(e) => handleStartInput(e.target.value)}
                 />
               </label>
+              <span className="range-picker-input-sep" aria-hidden="true">
+                →
+              </span>
               <label className="range-picker-input-field">
                 <span>End date</span>
                 <input
@@ -191,6 +218,7 @@ export function DateRangePickerControl({
                 month={leftMonth.getMonth()}
                 pendingStart={pendingStart}
                 pendingEnd={pendingEnd}
+                today={today}
                 onDayClick={handleDayClick}
                 onPrev={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() - 1, 1))}
                 showPrev
@@ -200,6 +228,7 @@ export function DateRangePickerControl({
                 month={rightMonth.getMonth()}
                 pendingStart={pendingStart}
                 pendingEnd={pendingEnd}
+                today={today}
                 onDayClick={handleDayClick}
                 onNext={() => setCursor(new Date(cursor.getFullYear(), cursor.getMonth() + 1, 1))}
                 showNext
@@ -226,6 +255,7 @@ function CalendarMonth({
   month,
   pendingStart,
   pendingEnd,
+  today,
   onDayClick,
   onPrev,
   onNext,
@@ -236,6 +266,7 @@ function CalendarMonth({
   month: number
   pendingStart: Date
   pendingEnd: Date
+  today: Date
   onDayClick: (day: Date) => void
   onPrev?: () => void
   onNext?: () => void
@@ -288,19 +319,36 @@ function CalendarMonth({
         <div className="range-picker-week" key={wi}>
           {week.map((day, di) => {
             if (!day) return <span className="range-picker-day is-empty" key={di} />
+
             const isStart = isSameDay(day, pendingStart)
             const isEnd = isSameDay(day, pendingEnd)
-            const isInRange = day > pendingStart && day < pendingEnd
-            const classes = [
-              'range-picker-day',
-              isStart || isEnd ? 'is-endpoint' : '',
-              isInRange ? 'is-in-range' : '',
-            ]
-              .filter(Boolean)
-              .join(' ')
+            const isBetween = day > pendingStart && day < pendingEnd
+            const isEndpoint = isStart || isEnd
+
+            let bandClass = ''
+            if (isBetween) bandClass = 'is-in-range'
+            else if (isStart && isEnd) bandClass = 'is-range-single'
+            else if (isStart) bandClass = 'is-range-start'
+            else if (isEnd) bandClass = 'is-range-end'
+
             return (
-              <button type="button" key={di} className={classes} onClick={() => onDayClick(day)}>
-                {day.getDate()}
+              <button
+                type="button"
+                key={di}
+                className={`range-picker-day ${bandClass}`}
+                onClick={() => onDayClick(day)}
+              >
+                <span
+                  className={[
+                    'range-picker-day-number',
+                    isEndpoint ? 'is-endpoint' : '',
+                    !isEndpoint && isSameDay(day, today) ? 'is-today' : '',
+                  ]
+                    .filter(Boolean)
+                    .join(' ')}
+                >
+                  {day.getDate()}
+                </span>
               </button>
             )
           })}

@@ -1,9 +1,7 @@
 export type RangePresetId =
   | 'mtd'
-  | 'qtd'
   | 'ytd'
   | 'lastMonth'
-  | 'lastQuarter'
   | 'lastYear'
   | 'recent3'
   | 'recent6'
@@ -13,10 +11,8 @@ export type RangePresetId =
 
 export const RANGE_PRESET_ORDER: RangePresetId[] = [
   'mtd',
-  'qtd',
   'ytd',
   'lastMonth',
-  'lastQuarter',
   'lastYear',
   'recent3',
   'recent6',
@@ -27,10 +23,8 @@ export const RANGE_PRESET_ORDER: RangePresetId[] = [
 
 export const RANGE_PRESET_LABELS: Record<RangePresetId, string> = {
   mtd: 'Month to date',
-  qtd: 'Quarter to date',
   ytd: 'Year to date',
   lastMonth: 'Last month',
-  lastQuarter: 'Last quarter',
   lastYear: 'Last year',
   recent3: 'Recent 3 months',
   recent6: 'Recent 6 months',
@@ -70,21 +64,11 @@ export function getPresetRange(
   switch (preset) {
     case 'mtd':
       return { start: new Date(y, m, 1), end: endOfDay(ref) }
-    case 'qtd': {
-      const qStartMonth = Math.floor(m / 3) * 3
-      return { start: new Date(y, qStartMonth, 1), end: endOfDay(ref) }
-    }
     case 'ytd':
       return { start: new Date(y, 0, 1), end: endOfDay(ref) }
     case 'lastMonth': {
       const start = new Date(y, m - 1, 1)
       const end = new Date(y, m, 0)
-      return { start, end: endOfDay(end) }
-    }
-    case 'lastQuarter': {
-      const qStartMonth = Math.floor(m / 3) * 3
-      const start = new Date(y, qStartMonth - 3, 1)
-      const end = new Date(y, qStartMonth, 0)
       return { start, end: endOfDay(end) }
     }
     case 'lastYear':
