@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import type { Ride } from '../../types/ride'
 import { Card } from '../common/Card'
 import { LineBullet } from '../common/LineBullet'
@@ -14,16 +15,21 @@ export function LatestRides({ rides }: { rides: Ride[] }) {
       ) : (
         <ul className="latest-rides-list">
           {latest.map((ride) => (
-            <li key={ride.id} className="latest-ride-card">
-              <div className="latest-ride-headline">
-                {ride.line && <LineBullet line={ride.line} />}
-                <span className="latest-ride-car">{ride.carNumber}</span>
-              </div>
-              <div className="latest-ride-time">
-                {formatRideTime(ride.timestamp)}
-                {'  '}
-                {formatRideDate(ride.timestamp)}
-              </div>
+            <li key={ride.id}>
+              <Link
+                to={`/lookup?car=${encodeURIComponent(ride.carNumber)}`}
+                className="latest-ride-card"
+              >
+                <div className="latest-ride-headline">
+                  {ride.line && <LineBullet line={ride.line} />}
+                  <span className="latest-ride-car">{ride.carNumber}</span>
+                </div>
+                <div className="latest-ride-time">
+                  {formatRideTime(ride.timestamp)}
+                  {'  '}
+                  {formatRideDate(ride.timestamp)}
+                </div>
+              </Link>
             </li>
           ))}
         </ul>

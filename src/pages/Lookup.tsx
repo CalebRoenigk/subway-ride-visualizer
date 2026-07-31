@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useRides } from '../data/useRides'
 import { useFleet } from '../data/useFleet'
 import { findConsist } from '../data/loadFleet'
@@ -17,7 +18,8 @@ import './lookup.css'
 export function Lookup() {
   const { rides, loading: ridesLoading } = useRides()
   const { fleet, loading: fleetLoading } = useFleet()
-  const [query, setQuery] = useState('')
+  const [searchParams] = useSearchParams()
+  const [query, setQuery] = useState(() => searchParams.get('car') ?? '')
   const carNumber = query.trim()
 
   const earliest = useMemo(
