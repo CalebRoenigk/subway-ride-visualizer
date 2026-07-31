@@ -1,3 +1,5 @@
+import { StyledSelect } from '../common/StyledSelect'
+
 export type RangePreset = '7d' | '30d' | '90d' | 'all'
 
 const PRESET_LABELS: Record<RangePreset, string> = {
@@ -15,17 +17,14 @@ export function DateRangeControl({
   onChange: (preset: RangePreset) => void
 }) {
   return (
-    <select
-      className="date-range-control"
+    <StyledSelect
       value={value}
-      onChange={(e) => onChange(e.target.value as RangePreset)}
-      aria-label="Date range"
-    >
-      {(Object.keys(PRESET_LABELS) as RangePreset[]).map((preset) => (
-        <option key={preset} value={preset}>
-          {PRESET_LABELS[preset]}
-        </option>
-      ))}
-    </select>
+      onChange={onChange}
+      ariaLabel="Date range"
+      options={(Object.keys(PRESET_LABELS) as RangePreset[]).map((preset) => ({
+        value: preset,
+        label: PRESET_LABELS[preset],
+      }))}
+    />
   )
 }

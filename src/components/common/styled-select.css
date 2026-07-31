@@ -1,0 +1,43 @@
+.styled-select-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.styled-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 28px 7px 12px;
+  cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    color 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.styled-select:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+.styled-select:focus-visible {
+  outline: none;
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 3px var(--gridline);
+}
+
+.styled-select-chevron {
+  position: absolute;
+  right: 10px;
+  color: var(--text-muted);
+  font-size: 12px;
+  pointer-events: none;
+}

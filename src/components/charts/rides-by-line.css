@@ -4,16 +4,6 @@
   gap: var(--space-3);
 }
 
-.date-range-control {
-  font-size: 13px;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  padding: 4px 8px;
-  cursor: pointer;
-}
-
 .rides-by-line-legend {
   display: flex;
   flex-wrap: wrap;

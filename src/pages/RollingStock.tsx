@@ -6,6 +6,7 @@ import type { CarAggregate } from '../utils/carAggregates'
 import { buildLineAssignment, buildTypeAssignment } from '../utils/categoryAssignment'
 import { useIsDarkMode } from '../utils/useIsDarkMode'
 import { LineBullet } from '../components/common/LineBullet'
+import { StyledSelect } from '../components/common/StyledSelect'
 import { CarNumberHeatmap } from '../components/heatmap/CarNumberHeatmap'
 import { TopRiddenCars } from '../components/rolling-stock/TopRiddenCars'
 import { FleetCoverageCard } from '../components/rolling-stock/FleetCoverageCard'
@@ -89,18 +90,15 @@ export function RollingStock() {
         colorOf={colorOf}
         legend={legend}
         meta={
-          <select
-            className="date-range-control"
+          <StyledSelect
             value={colorMode}
-            onChange={(e) => setColorMode(e.target.value as ColorMode)}
-            aria-label="Color the heatmap by"
-          >
-            {(Object.keys(MODE_LABELS) as ColorMode[]).map((mode) => (
-              <option key={mode} value={mode}>
-                {MODE_LABELS[mode]}
-              </option>
-            ))}
-          </select>
+            onChange={setColorMode}
+            ariaLabel="Color the heatmap by"
+            options={(Object.keys(MODE_LABELS) as ColorMode[]).map((mode) => ({
+              value: mode,
+              label: MODE_LABELS[mode],
+            }))}
+          />
         }
       />
     </div>

@@ -5,8 +5,12 @@
   gap: 6px;
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
+  background: var(--surface-1);
   padding: 4px 10px 4px 4px;
   cursor: pointer;
+  transition:
+    border-color 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .line-select-wrap:hover {
@@ -14,8 +18,8 @@
 }
 
 .line-select-wrap:focus-within {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 2px;
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 3px var(--gridline);
 }
 
 .line-select-visual {

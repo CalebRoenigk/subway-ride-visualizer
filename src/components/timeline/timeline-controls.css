@@ -17,16 +17,6 @@
   color: var(--text-primary);
 }
 
-.timeline-select {
-  font-size: 13px;
-  color: var(--text-secondary);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  padding: 6px 10px;
-  cursor: pointer;
-}
-
 .color-key {
   display: flex;
   align-items: center;
