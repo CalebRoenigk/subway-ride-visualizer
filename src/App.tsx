@@ -4,7 +4,7 @@ import { Overview } from './pages/Overview'
 import { Timeline } from './pages/Timeline'
 import { Lines } from './pages/Lines'
 import { Lookup } from './pages/Lookup'
-import { ComingSoon } from './pages/ComingSoon'
+import { RollingStock } from './pages/RollingStock'
 
 function App() {
   return (
@@ -14,10 +14,7 @@ function App() {
           <Route path="/" element={<Overview />} />
           <Route path="/timeline" element={<Timeline />} />
           <Route path="/lines" element={<Lines />} />
-          <Route
-            path="/rolling-stock"
-            element={<ComingSoon title="Rolling Stock" />}
-          />
+          <Route path="/rolling-stock" element={<RollingStock />} />
           <Route path="/lookup" element={<Lookup />} />
         </Route>
       </Routes>

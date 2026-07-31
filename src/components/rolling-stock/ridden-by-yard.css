@@ -1,0 +1,38 @@
+.yard-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.yard-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.yard-label {
+  width: 180px;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.yard-track {
+  flex: 1;
+  height: 16px;
+}
+
+.yard-fill {
+  height: 100%;
+  background: var(--text-muted);
+  border-radius: 0 4px 4px 0;
+  min-width: 3px;
+}
+
+.yard-count {
+  width: 56px;
+  text-align: right;
+  font-size: 13px;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}

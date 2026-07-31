@@ -1,0 +1,12 @@
+.rolling-stock-row {
+  display: grid;
+  grid-template-columns: 4fr 8fr;
+  gap: var(--space-5);
+  align-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .rolling-stock-row {
+    grid-template-columns: 1fr;
+  }
+}

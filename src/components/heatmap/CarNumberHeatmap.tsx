@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { useMemo, type ReactNode } from 'react'
 import type { Ride } from '../../types/ride'
 import { Card } from '../common/Card'
 import { computeCarAggregates, type CarAggregate } from '../../utils/carAggregates'
@@ -20,10 +19,12 @@ export function CarNumberHeatmap({
   rides,
   meta = 'All time',
   colorOf,
+  legend,
 }: {
   rides: Ride[]
-  meta?: string
+  meta?: ReactNode
   colorOf?: (mark: CarAggregate) => string
+  legend?: ReactNode
 }) {
   const isDark = useIsDarkMode()
 
@@ -103,23 +104,21 @@ export function CarNumberHeatmap({
       </div>
 
       <div className="heatmap-footer">
-        {!colorOf && (
-          <div className="heatmap-scale">
-            <span className="heatmap-scale-label">1 ride</span>
-            <span
-              className="heatmap-scale-bar"
-              style={{
-                background: `linear-gradient(to right, ${getRideCountScaleStops(isDark).join(', ')})`,
-              }}
-            />
-            <span className="heatmap-scale-label">
-              {maxCount} {maxCount === 1 ? 'ride' : 'rides'}
-            </span>
-          </div>
-        )}
-        <Link to="/lookup" className="heatmap-table-link">
-          View full car list →
-        </Link>
+        {legend ??
+          (!colorOf && (
+            <div className="heatmap-scale">
+              <span className="heatmap-scale-label">1 ride</span>
+              <span
+                className="heatmap-scale-bar"
+                style={{
+                  background: `linear-gradient(to right, ${getRideCountScaleStops(isDark).join(', ')})`,
+                }}
+              />
+              <span className="heatmap-scale-label">
+                {maxCount} {maxCount === 1 ? 'ride' : 'rides'}
+              </span>
+            </div>
+          ))}
       </div>
     </Card>
   )

@@ -1,0 +1,52 @@
+.top-cars-empty {
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: var(--space-4) 0;
+}
+
+.top-cars-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.top-car-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.top-car-row:last-child {
+  border-bottom: none;
+}
+
+.top-car-rank {
+  width: 16px;
+  flex-shrink: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.top-car-number {
+  font-weight: 700;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.top-car-type {
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.top-car-count {
+  color: var(--text-secondary);
+  font-size: 13px;
+  white-space: nowrap;
+}
