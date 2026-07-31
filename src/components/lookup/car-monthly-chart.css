@@ -1,0 +1,9 @@
+.car-monthly-bar {
+  fill: var(--text-muted);
+}
+
+.car-monthly-tooltip {
+  top: 4px;
+  transform: translateX(-50%);
+  min-width: 100px;
+}

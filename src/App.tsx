@@ -3,6 +3,7 @@ import { AppLayout } from './components/layout/AppLayout'
 import { Overview } from './pages/Overview'
 import { Timeline } from './pages/Timeline'
 import { Lines } from './pages/Lines'
+import { Lookup } from './pages/Lookup'
 import { ComingSoon } from './pages/ComingSoon'
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
             path="/rolling-stock"
             element={<ComingSoon title="Rolling Stock" />}
           />
-          <Route path="/lookup" element={<ComingSoon title="Lookup" />} />
+          <Route path="/lookup" element={<Lookup />} />
         </Route>
       </Routes>
     </HashRouter>
