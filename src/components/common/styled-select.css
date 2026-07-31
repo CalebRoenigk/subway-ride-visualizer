@@ -1,13 +1,12 @@
 .styled-select-wrap {
   position: relative;
   display: inline-flex;
-  align-items: center;
 }
 
-.styled-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+.styled-select-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-family: inherit;
   font-size: 13px;
   font-weight: 500;
@@ -15,29 +14,57 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 7px 28px 7px 12px;
+  padding: 7px 12px;
   cursor: pointer;
+  white-space: nowrap;
   transition:
     border-color 0.12s ease,
     color 0.12s ease,
     box-shadow 0.12s ease;
 }
 
-.styled-select:hover {
+.styled-select-trigger:hover {
   border-color: var(--border-strong);
   color: var(--text-primary);
 }
 
-.styled-select:focus-visible {
-  outline: none;
+.styled-select-trigger.is-open {
   border-color: var(--text-primary);
+  color: var(--text-primary);
   box-shadow: 0 0 0 3px var(--gridline);
 }
 
 .styled-select-chevron {
-  position: absolute;
-  right: 10px;
   color: var(--text-muted);
   font-size: 12px;
-  pointer-events: none;
+  transition: transform 0.15s ease;
+}
+
+.styled-select-chevron.is-open {
+  transform: rotate(180deg);
+}
+
+/* Stacks every option's label in the same grid cell so the trigger's
+   intrinsic width is always the widest possible label, not just the
+   currently selected one — keeps the trigger (and the panel, which mirrors
+   its width) from resizing when the selection changes. */
+.styled-select-label-stack {
+  display: grid;
+}
+
+.styled-select-label-ghost {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.styled-select-label-ghost.is-visible {
+  visibility: visible;
+}
+
+.styled-select-panel {
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
 }

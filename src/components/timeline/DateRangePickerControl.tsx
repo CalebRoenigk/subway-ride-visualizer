@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   RANGE_PRESET_LABELS,
   RANGE_PRESET_ORDER,
@@ -9,6 +9,7 @@ import {
   toDateInputValue,
   type RangePresetId,
 } from '../../utils/dateRangePresets'
+import { useDismissablePopover } from '../../utils/useDismissablePopover'
 import './date-range-picker.css'
 
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
@@ -61,35 +62,14 @@ export function DateRangePickerControl({
   earliest,
   onApply,
 }: DateRangePickerControlProps) {
-  const [open, setOpen] = useState(false)
+  const { open, setOpen, ref: containerRef } = useDismissablePopover<HTMLDivElement>()
   const [pendingPreset, setPendingPreset] = useState<RangePresetId>(preset)
   const [pendingStart, setPendingStart] = useState(start)
   const [pendingEnd, setPendingEnd] = useState(end)
   const [awaitingSecondClick, setAwaitingSecondClick] = useState(false)
   const [cursor, setCursor] = useState(() => new Date(start.getFullYear(), start.getMonth(), 1))
-  const containerRef = useRef<HTMLDivElement>(null)
 
   const today = useMemo(() => new Date(), [])
-
-  useEffect(() => {
-    if (!open) return
-
-    function handlePointerDown(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
-    }
-    function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === 'Escape') setOpen(false)
-    }
-
-    document.addEventListener('mousedown', handlePointerDown)
-    document.addEventListener('keydown', handleKeyDown)
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-      document.removeEventListener('keydown', handleKeyDown)
-    }
-  }, [open])
 
   function openPanel() {
     setPendingPreset(preset)
