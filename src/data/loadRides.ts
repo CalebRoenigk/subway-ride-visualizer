@@ -1,5 +1,6 @@
 import { parseCsv } from '../utils/csv'
 import type { Ride } from '../types/ride'
+import { loadFleet, buildCarTypeIndex } from './loadFleet'
 
 const HEADER_ALIASES: Record<keyof Omit<Ride, 'id'>, string[]> = {
   carNumber: ['car number', 'car #', 'car num', 'car', 'number'],
@@ -99,18 +100,32 @@ export interface RidesResult {
   isSample: boolean
 }
 
+// The fleet export's car type is authoritative (real consist records); the
+// CSV's own Car Type column — hand-logged in Airtable — only fills in for
+// car numbers the fleet export doesn't cover.
+function applyFleetCarTypes(rides: Ride[], typeIndex: Map<string, string>): Ride[] {
+  return rides.map((ride) => {
+    const fleetType = typeIndex.get(ride.carNumber)
+    return fleetType ? { ...ride, carType: fleetType } : ride
+  })
+}
+
 export async function loadRides(): Promise<RidesResult> {
+  const typeIndex = buildCarTypeIndex(await loadFleet())
+
   try {
     const res = await fetch(`${import.meta.env.BASE_URL}data/rides.csv`)
     if (res.ok) {
       const text = await res.text()
       const rides = parseRidesCsv(text)
-      if (rides.length > 0) return { rides, isSample: false }
+      if (rides.length > 0) {
+        return { rides: applyFleetCarTypes(rides, typeIndex), isSample: false }
+      }
     }
   } catch {
     // fall through to sample data
   }
 
   const { SAMPLE_RIDES } = await import('./sampleRides')
-  return { rides: SAMPLE_RIDES, isSample: true }
+  return { rides: applyFleetCarTypes(SAMPLE_RIDES, typeIndex), isSample: true }
 }

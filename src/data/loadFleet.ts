@@ -45,3 +45,15 @@ export function findConsist(
 ): FleetRecord | undefined {
   return fleet.find((r) => r.unitNumbers.includes(carNumber))
 }
+
+// Car number -> real fleet car type (e.g. "R211A"), the authoritative
+// source over whatever type an Airtable row happened to be logged with.
+export function buildCarTypeIndex(fleet: FleetRecord[]): Map<string, string> {
+  const index = new Map<string, string>()
+  for (const record of fleet) {
+    for (const unit of record.unitNumbers) {
+      index.set(unit, record.fleetInfo.type)
+    }
+  }
+  return index
+}
