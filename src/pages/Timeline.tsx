@@ -10,10 +10,11 @@ import {
   buildTypeAssignment,
 } from '../utils/categoryAssignment'
 import {
-  getTimePeriodRange,
-  TIME_PERIOD_LABELS,
-  type TimePeriod,
-} from '../utils/timePeriod'
+  formatRangeLabel,
+  getPresetRange,
+  RANGE_PRESET_LABELS,
+  type RangePresetId,
+} from '../utils/dateRangePresets'
 import { Card } from '../components/common/Card'
 import { LineBullet } from '../components/common/LineBullet'
 import { StatsRow } from '../components/stats/StatsRow'
@@ -22,7 +23,7 @@ import {
   ColorByControl,
   type ColorByMode,
 } from '../components/timeline/ColorByControl'
-import { TimePeriodControl } from '../components/timeline/TimePeriodControl'
+import { DateRangePickerControl } from '../components/timeline/DateRangePickerControl'
 import { ColorKey } from '../components/timeline/ColorKey'
 import '../components/timeline/timeline-controls.css'
 import './timeline.css'
@@ -35,7 +36,9 @@ export function Timeline() {
   const { rides, loading } = useRides()
   const isDark = useIsDarkMode()
   const [colorBy, setColorBy] = useState<ColorByMode>('type')
-  const [period, setPeriod] = useState<TimePeriod>('month')
+  const [preset, setPreset] = useState<RangePresetId>('allTime')
+  const [customRange, setCustomRange] = useState<{ start: Date; end: Date } | null>(null)
+  const today = useMemo(() => new Date(), [])
 
   const earliest = useMemo(
     () =>
@@ -44,18 +47,16 @@ export function Timeline() {
         : null,
     [rides],
   )
-  const latest = useMemo(
-    () =>
-      rides.length
-        ? new Date(Math.max(...rides.map((r) => r.timestamp.getTime())))
-        : new Date(),
-    [rides],
-  )
 
-  const { start, end } = useMemo(
-    () => getTimePeriodRange(period, latest, earliest),
-    [period, latest, earliest],
-  )
+  const { start, end } = useMemo(() => {
+    if (preset === 'custom' && customRange) return customRange
+    return getPresetRange(preset, today, earliest) ?? { start: earliest ?? today, end: today }
+  }, [preset, customRange, today, earliest])
+
+  function applyRange(newPreset: RangePresetId, newStart: Date, newEnd: Date) {
+    setPreset(newPreset)
+    if (newPreset === 'custom') setCustomRange({ start: newStart, end: newEnd })
+  }
 
   const periodRides = useMemo(
     () =>
@@ -91,7 +92,13 @@ export function Timeline() {
     <div className="page-stack">
       <div className="timeline-controls">
         <ColorByControl value={colorBy} onChange={setColorBy} />
-        <TimePeriodControl value={period} onChange={setPeriod} />
+        <DateRangePickerControl
+          preset={preset}
+          start={start}
+          end={end}
+          earliest={earliest}
+          onApply={applyRange}
+        />
       </div>
 
       <ColorKey mode={colorBy} order={assignment.order} colorOf={assignment.colorOf} />
@@ -125,7 +132,7 @@ export function Timeline() {
 
       <CarNumberHeatmap
         rides={periodRides}
-        meta={TIME_PERIOD_LABELS[period]}
+        meta={preset === 'custom' ? formatRangeLabel(start, end) : RANGE_PRESET_LABELS[preset]}
         colorOf={(mark) =>
           assignment.colorOf(
             assignment.remap(colorBy === 'line' ? mark.line : mark.carType),
