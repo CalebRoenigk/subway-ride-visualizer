@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useRides } from '../data/useRides'
 import { getLineMeta } from '../data/lines'
-import { buildLineAssignment } from '../utils/categoryAssignment'
 import { bucketRidesByMonth, bucketRidesByHour } from '../components/charts/chart-utils'
 import { Card } from '../components/common/Card'
 import { LineBullet } from '../components/common/LineBullet'
 import { LinesKey } from '../components/lines/LinesKey'
-import { SmallMultiplesTrend } from '../components/lines/SmallMultiplesTrend'
+import { LineMonthHeatmap } from '../components/lines/LineMonthHeatmap'
 import { TopLinesBar } from '../components/lines/TopLinesBar'
 import { RidesByHourChart } from '../components/lines/RidesByHourChart'
 import { TypeDistributionBar } from '../components/lines/TypeDistributionBar'
@@ -31,8 +30,6 @@ export function Lines() {
         : new Date(),
     [rides],
   )
-
-  const assignment = useMemo(() => buildLineAssignment(rides), [rides])
 
   const monthlyBuckets = useMemo(
     () =>
@@ -76,11 +73,10 @@ export function Lines() {
       <LinesKey />
 
       <Card title="Rides">
-        <SmallMultiplesTrend
+        <LineMonthHeatmap
           buckets={monthlyBuckets}
           categories={linesByVolume}
-          colorOf={assignment.colorOf}
-          renderLabel={(id) => <LineBullet line={id} size="sm" />}
+          renderRowLabel={(id) => <LineBullet line={id} size="sm" />}
         />
       </Card>
 
