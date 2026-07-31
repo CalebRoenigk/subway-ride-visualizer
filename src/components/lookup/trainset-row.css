@@ -15,6 +15,14 @@
   flex: 1;
   padding: var(--space-3) var(--space-2);
   border-radius: 8px;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+}
+
+.trainset-tile:hover {
+  transform: scale(1.03);
+  box-shadow: var(--shadow-sm);
 }
 
 .trainset-tile-car {
