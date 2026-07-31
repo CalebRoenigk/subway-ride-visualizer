@@ -47,8 +47,9 @@
 .chart-tooltip {
   position: absolute;
   transform: translate(-50%, calc(-100% - 14px));
-  background: var(--tooltip-bg);
-  color: var(--tooltip-text);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   padding: var(--space-2) var(--space-3);
   font-size: 12px;
@@ -117,6 +118,6 @@
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
-  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-top: 1px solid var(--border);
   padding-top: 6px;
 }

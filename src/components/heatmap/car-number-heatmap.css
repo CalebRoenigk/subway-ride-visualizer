@@ -78,8 +78,9 @@
   bottom: calc(100% + 8px);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--tooltip-bg);
-  color: var(--tooltip-text);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
   border-radius: 8px;
   padding: 6px 10px;
   font-size: 12px;
