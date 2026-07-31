@@ -1,9 +1,10 @@
 .stats-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border);
   border-radius: var(--radius-card);
   background: var(--surface-1);
+  box-shadow: var(--shadow-sm);
 }
 
 .stat-tile {

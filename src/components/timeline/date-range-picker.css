@@ -61,26 +61,10 @@
   background: var(--surface-1);
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow:
-    0 20px 48px rgba(0, 0, 0, 0.16),
-    0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
   animation: range-picker-pop 0.14s cubic-bezier(0.2, 0.8, 0.2, 1);
   transform-origin: top right;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme='light'])) .range-picker-panel {
-    box-shadow:
-      0 20px 48px rgba(0, 0, 0, 0.5),
-      0 4px 12px rgba(0, 0, 0, 0.3);
-  }
-}
-
-:root[data-theme='dark'] .range-picker-panel {
-  box-shadow:
-    0 20px 48px rgba(0, 0, 0, 0.5),
-    0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 @keyframes range-picker-pop {

@@ -1,7 +1,8 @@
 .card {
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--border);
   border-radius: var(--radius-card);
   background: var(--surface-1);
+  box-shadow: var(--shadow-sm);
   padding: var(--space-5);
   display: flex;
   flex-direction: column;
@@ -13,6 +14,8 @@
   align-items: baseline;
   justify-content: space-between;
   gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border);
 }
 
 .card-title {
