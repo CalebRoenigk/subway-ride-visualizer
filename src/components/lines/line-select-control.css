@@ -1,0 +1,28 @@
+.line-select-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px 10px 4px 4px;
+}
+
+.line-select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  font-weight: 700;
+  font-size: 13px;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+}
+
+.line-select-chevron {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1;
+}

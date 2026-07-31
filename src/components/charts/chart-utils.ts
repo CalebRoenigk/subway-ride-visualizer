@@ -1,10 +1,40 @@
 import type { Ride } from '../../types/ride'
-import { addDays, startOfDay } from '../../utils/date'
+import { addDays, addMonths, startOfDay, startOfMonth } from '../../utils/date'
 
 export interface DayBucket {
   date: Date
   counts: Map<string, number>
   total: number
+}
+
+export type MonthBucket = DayBucket
+
+export function bucketRidesByMonth(
+  rides: Ride[],
+  start: Date,
+  end: Date,
+  getCategory: (ride: Ride) => string,
+): MonthBucket[] {
+  const from = startOfMonth(start)
+  const to = startOfMonth(end)
+  const buckets = new Map<number, MonthBucket>()
+
+  for (let d = from; d.getTime() <= to.getTime(); d = addMonths(d, 1)) {
+    buckets.set(d.getTime(), { date: new Date(d), counts: new Map(), total: 0 })
+  }
+
+  for (const ride of rides) {
+    const key = startOfMonth(ride.timestamp).getTime()
+    const bucket = buckets.get(key)
+    if (!bucket) continue
+    const category = getCategory(ride) || 'Unknown'
+    bucket.counts.set(category, (bucket.counts.get(category) ?? 0) + 1)
+    bucket.total += 1
+  }
+
+  return Array.from(buckets.values()).sort(
+    (a, b) => a.date.getTime() - b.date.getTime(),
+  )
 }
 
 export function bucketRidesByDay(
@@ -62,4 +92,42 @@ export function computeDateTickInterval(dayCount: number): number {
   const rough = Math.ceil(dayCount / target)
   const niceIntervals = [1, 2, 5, 7, 10, 14, 21, 30, 60]
   return niceIntervals.find((n) => n >= rough) ?? 90
+}
+
+// A bar/column with a 4px rounded data-end and a square baseline edge.
+export function roundedTopPath(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  radius: number,
+) {
+  const r = Math.min(radius, width / 2, Math.max(height, 0))
+  if (height <= 0) return ''
+  if (r <= 0) {
+    return `M${x},${y} h${width} v${height} h${-width} Z`
+  }
+  return `M${x},${y + r}
+    a${r},${r} 0 0 1 ${r},${-r}
+    h${width - 2 * r}
+    a${r},${r} 0 0 1 ${r},${r}
+    v${height - r}
+    h${-width}
+    Z`
+}
+
+export interface HourBucket {
+  hour: number
+  count: number
+}
+
+export function bucketRidesByHour(rides: Ride[]): HourBucket[] {
+  const buckets: HourBucket[] = Array.from({ length: 24 }, (_, hour) => ({
+    hour,
+    count: 0,
+  }))
+  for (const ride of rides) {
+    buckets[ride.timestamp.getHours()].count += 1
+  }
+  return buckets
 }

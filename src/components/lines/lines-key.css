@@ -1,0 +1,18 @@
+.lines-key {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.lines-key-label {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.lines-key-items {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}

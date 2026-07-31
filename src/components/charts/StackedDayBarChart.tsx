@@ -1,5 +1,10 @@
 import { useRef, useState, type ReactNode } from 'react'
-import { computeDateTickInterval, computeYTicks, type DayBucket } from './chart-utils'
+import {
+  computeDateTickInterval,
+  computeYTicks,
+  roundedTopPath,
+  type DayBucket,
+} from './chart-utils'
 import { useElementWidth } from './useElementWidth'
 import './stacked-day-bar-chart.css'
 
@@ -7,27 +12,6 @@ const MARGIN = { top: 8, right: 8, bottom: 30, left: 34 }
 const PLOT_HEIGHT = 200
 const BAR_MAX_WIDTH = 24
 const SEGMENT_GAP = 2
-
-function roundedTopPath(
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  radius: number,
-) {
-  const r = Math.min(radius, width / 2, Math.max(height, 0))
-  if (height <= 0) return ''
-  if (r <= 0) {
-    return `M${x},${y} h${width} v${height} h${-width} Z`
-  }
-  return `M${x},${y + r}
-    a${r},${r} 0 0 1 ${r},${-r}
-    h${width - 2 * r}
-    a${r},${r} 0 0 1 ${r},${r}
-    v${height - r}
-    h${-width}
-    Z`
-}
 
 interface HoverInfo {
   index: number

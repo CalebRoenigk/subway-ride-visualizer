@@ -1,0 +1,5 @@
+.hour-tooltip {
+  top: 4px;
+  transform: translateX(-50%);
+  min-width: 80px;
+}
