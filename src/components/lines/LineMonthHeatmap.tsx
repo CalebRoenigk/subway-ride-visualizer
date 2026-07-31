@@ -41,21 +41,30 @@ export function LineMonthHeatmap({
         {categories.map((id) => (
           <Fragment key={id}>
             <div className="lmh-row-label">{renderRowLabel(id)}</div>
-            {buckets.map((bucket) => {
+            {buckets.map((bucket, bi) => {
               const count = bucket.counts.get(id) ?? 0
               const color = count > 0 ? getRideCountColor(count, maxValue, isDark) : undefined
+              const pct = buckets.length > 1 ? bi / (buckets.length - 1) : 0.5
+              const edgeClass = pct < 0.08 ? 'is-left-edge' : pct > 0.92 ? 'is-right-edge' : ''
               return (
                 <div
                   key={bucket.date.toISOString()}
-                  className={`lmh-cell ${count === 0 ? 'is-empty' : ''}`}
+                  className={`lmh-cell ${count === 0 ? 'is-empty' : ''} ${edgeClass}`}
                   style={color ? { background: color } : undefined}
                   tabIndex={count > 0 ? 0 : undefined}
-                  title={
-                    count > 0
-                      ? `${id} · ${bucket.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}: ${count} rides`
-                      : undefined
-                  }
-                />
+                >
+                  {count > 0 && (
+                    <div className="lmh-tooltip">
+                      <div className="lmh-tooltip-line">{id}</div>
+                      <div>
+                        {bucket.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                      </div>
+                      <div className="lmh-tooltip-count">
+                        {count} {count === 1 ? 'ride' : 'rides'}
+                      </div>
+                    </div>
+                  )}
+                </div>
               )
             })}
           </Fragment>

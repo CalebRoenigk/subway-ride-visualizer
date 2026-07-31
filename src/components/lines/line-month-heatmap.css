@@ -28,12 +28,58 @@
 }
 
 .lmh-cell {
+  position: relative;
   height: 22px;
   border-radius: 2px;
 }
 
 .lmh-cell.is-empty {
   background: var(--gridline);
+}
+
+.lmh-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--surface-1);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lmh-cell.is-left-edge .lmh-tooltip {
+  left: 0;
+  transform: none;
+}
+
+.lmh-cell.is-right-edge .lmh-tooltip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.lmh-cell:hover .lmh-tooltip,
+.lmh-cell:focus-visible .lmh-tooltip {
+  opacity: 1;
+}
+
+.lmh-tooltip-line {
+  font-weight: 600;
+}
+
+.lmh-tooltip-count {
+  font-weight: 600;
 }
 
 .lmh-scale {

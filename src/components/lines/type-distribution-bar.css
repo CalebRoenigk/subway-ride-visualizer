@@ -8,15 +8,25 @@
   display: flex;
   width: 100%;
   height: 56px;
-  border-radius: 8px;
-  overflow: hidden;
 }
 
 .type-distribution-segment {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   min-width: 2px;
+  cursor: default;
+}
+
+.type-distribution-segment.is-first {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+.type-distribution-segment.is-last {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .type-distribution-segment + .type-distribution-segment {
@@ -32,6 +42,47 @@
   font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
+}
+
+.type-distribution-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--text-primary);
+  color: var(--surface-1);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.type-distribution-segment.is-left-edge .type-distribution-tooltip {
+  left: 0;
+  transform: none;
+}
+
+.type-distribution-segment.is-right-edge .type-distribution-tooltip {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+.type-distribution-segment:hover .type-distribution-tooltip,
+.type-distribution-segment:focus-visible .type-distribution-tooltip {
+  opacity: 1;
+}
+
+.type-distribution-tooltip-count {
+  font-weight: 600;
 }
 
 .type-distribution-key {

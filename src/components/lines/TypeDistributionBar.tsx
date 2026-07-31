@@ -22,6 +22,25 @@ export function TypeDistributionBar({ rides }: { rides: Ride[] }) {
   const total = rides.length
   const present = assignment.order.filter((id) => (counts.get(id) ?? 0) > 0)
 
+  const segments = useMemo(() => {
+    let cumulativePct = 0
+    return present.map((id, idx) => {
+      const count = counts.get(id) ?? 0
+      const pct = total > 0 ? (count / total) * 100 : 0
+      const midPct = cumulativePct + pct / 2
+      cumulativePct += pct
+      const edgeClass = midPct < 10 ? 'is-left-edge' : midPct > 90 ? 'is-right-edge' : ''
+      const positionClass = [
+        idx === 0 ? 'is-first' : '',
+        idx === present.length - 1 ? 'is-last' : '',
+        edgeClass,
+      ]
+        .filter(Boolean)
+        .join(' ')
+      return { id, count, pct, positionClass }
+    })
+  }, [present, counts, total])
+
   if (total === 0) {
     return <div className="stacked-chart-empty">No rides yet for this line.</div>
   }
@@ -33,16 +52,14 @@ export function TypeDistributionBar({ rides }: { rides: Ride[] }) {
         role="img"
         aria-label="Car type distribution for the selected line"
       >
-        {present.map((id) => {
-          const count = counts.get(id) ?? 0
-          const pct = (count / total) * 100
+        {segments.map(({ id, count, pct, positionClass }) => {
           const color = assignment.colorOf(id)
           return (
             <div
               key={id}
-              className="type-distribution-segment"
+              className={`type-distribution-segment ${positionClass}`}
               style={{ width: `${pct}%`, background: color, color: getContrastText(color) }}
-              title={`${id}: ${count} ${count === 1 ? 'ride' : 'rides'}`}
+              tabIndex={0}
             >
               {pct > 8 && (
                 <div className="type-distribution-label">
@@ -50,6 +67,12 @@ export function TypeDistributionBar({ rides }: { rides: Ride[] }) {
                   <span className="tabular">{count}</span>
                 </div>
               )}
+              <div className="type-distribution-tooltip">
+                <span>{id}</span>
+                <span className="type-distribution-tooltip-count">
+                  {count} {count === 1 ? 'ride' : 'rides'}
+                </span>
+              </div>
             </div>
           )
         })}

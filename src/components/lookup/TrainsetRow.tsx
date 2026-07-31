@@ -37,7 +37,6 @@ export function TrainsetRow({
             key={unit}
             className={`trainset-tile ${isSearched ? 'is-searched' : ''}`}
             style={{ background, color }}
-            title={`Car ${unit}: ${count} ${count === 1 ? 'ride' : 'rides'}`}
           >
             <span className="trainset-tile-car">{unit}</span>
             <span className="trainset-tile-count tabular">{count}</span>
