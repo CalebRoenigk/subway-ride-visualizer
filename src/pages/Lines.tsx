@@ -3,10 +3,10 @@ import { useRides } from '../data/useRides'
 import { getLineMeta } from '../data/lines'
 import { buildLineAssignment } from '../utils/categoryAssignment'
 import { bucketRidesByMonth, bucketRidesByHour } from '../components/charts/chart-utils'
-import { MonthlyLineTrendChart } from '../components/charts/MonthlyLineTrendChart'
 import { Card } from '../components/common/Card'
 import { LineBullet } from '../components/common/LineBullet'
 import { LinesKey } from '../components/lines/LinesKey'
+import { SmallMultiplesTrend } from '../components/lines/SmallMultiplesTrend'
 import { TopLinesBar } from '../components/lines/TopLinesBar'
 import { RidesByHourChart } from '../components/lines/RidesByHourChart'
 import { TypeDistributionBar } from '../components/lines/TypeDistributionBar'
@@ -76,19 +76,11 @@ export function Lines() {
       <LinesKey />
 
       <Card title="Rides">
-        <MonthlyLineTrendChart
+        <SmallMultiplesTrend
           buckets={monthlyBuckets}
-          categories={assignment.order}
+          categories={linesByVolume}
           colorOf={assignment.colorOf}
-          ariaLabel={`Monthly rides by line, ${monthlyBuckets.length} months`}
-          emptyMessage="No rides yet."
-          renderTooltipChip={(id, count) => (
-            <>
-              <LineBullet line={id} size="sm" />
-              <span className="chart-tooltip-value">{count}</span>
-            </>
-          )}
-          renderPeakLabel={(id) => <LineBullet line={id} size="sm" />}
+          renderLabel={(id) => <LineBullet line={id} size="sm" />}
         />
       </Card>
 
@@ -109,17 +101,8 @@ export function Lines() {
         </Card>
       </div>
 
-      <Card
-        title="Type Distribution"
-        meta={
-          <LineSelectControl
-            lines={linesByVolume}
-            value={selectedLine}
-            onChange={setSelectedLineOverride}
-          />
-        }
-      >
-        <TypeDistributionBar rides={selectedLineRides} />
+      <Card title="Type Distribution">
+        <TypeDistributionBar rides={rides} />
       </Card>
     </div>
   )

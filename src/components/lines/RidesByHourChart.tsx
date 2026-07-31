@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react'
 import { computeYTicks, roundedTopPath, type HourBucket } from '../charts/chart-utils'
-import { useElementWidth } from '../charts/useElementWidth'
+import { useElementSize } from '../charts/useElementSize'
 import '../charts/stacked-day-bar-chart.css'
 import './rides-by-hour-chart.css'
 
 const MARGIN = { top: 8, right: 8, bottom: 24, left: 30 }
-const PLOT_HEIGHT = 140
+const MIN_PLOT_HEIGHT = 100
+const FALLBACK_SIZE = { width: 500, height: 200 }
 const BAR_MAX_WIDTH = 16
 const TICK_HOURS = [0, 3, 6, 9, 12, 15, 18, 21]
 
@@ -24,24 +25,24 @@ export function RidesByHourChart({
 }) {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const width = useElementWidth(containerRef, 500)
+  const { width, height: svgHeight } = useElementSize(containerRef, FALLBACK_SIZE)
 
+  const plotHeight = Math.max(svgHeight - MARGIN.top - MARGIN.bottom, MIN_PLOT_HEIGHT)
   const maxCount = Math.max(0, ...buckets.map((b) => b.count))
   const { ticks, niceMax } = computeYTicks(maxCount)
   const plotWidth = Math.max(width - MARGIN.left - MARGIN.right, 0)
   const hourWidth = plotWidth / 24
   const barWidth = Math.max(Math.min(BAR_MAX_WIDTH, hourWidth * 0.6), 2)
   const yScale = (v: number) =>
-    niceMax > 0 ? PLOT_HEIGHT - (v / niceMax) * PLOT_HEIGHT : PLOT_HEIGHT
-  const svgHeight = MARGIN.top + PLOT_HEIGHT + MARGIN.bottom
+    niceMax > 0 ? plotHeight - (v / niceMax) * plotHeight : plotHeight
 
   if (buckets.every((b) => b.count === 0)) {
-    return <div className="stacked-chart-empty">No rides yet for this line.</div>
+    return <div className="stacked-chart-empty hour-chart-fill">No rides yet for this line.</div>
   }
 
   return (
-    <div className="stacked-chart" ref={containerRef}>
-      <svg width="100%" height={svgHeight} role="img" aria-label="Rides by hour of day">
+    <div className="stacked-chart hour-chart-fill" ref={containerRef}>
+      <svg width="100%" height="100%" role="img" aria-label="Rides by hour of day">
         <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
           {ticks.map((t) => (
             <g key={t}>
@@ -51,19 +52,19 @@ export function RidesByHourChart({
               </text>
             </g>
           ))}
-          <line x1={0} x2={plotWidth} y1={PLOT_HEIGHT} y2={PLOT_HEIGHT} className="baseline" />
+          <line x1={0} x2={plotWidth} y1={plotHeight} y2={plotHeight} className="baseline" />
 
           {buckets.map((bucket, i) => {
             const barX = i * hourWidth + (hourWidth - barWidth) / 2
             const top = yScale(bucket.count)
-            const barHeight = PLOT_HEIGHT - top
+            const barHeight = plotHeight - top
             const isHovered = hoverIndex === i
             const hasData = bucket.count > 0
 
             return (
               <g key={bucket.hour}>
                 {isHovered && (
-                  <rect x={i * hourWidth} y={0} width={hourWidth} height={PLOT_HEIGHT} className="hover-band" />
+                  <rect x={i * hourWidth} y={0} width={hourWidth} height={plotHeight} className="hover-band" />
                 )}
                 {hasData && (
                   <path d={roundedTopPath(barX, top, barWidth, barHeight, 4)} fill={color} />
@@ -72,7 +73,7 @@ export function RidesByHourChart({
                   x={i * hourWidth}
                   y={0}
                   width={hourWidth}
-                  height={PLOT_HEIGHT}
+                  height={plotHeight}
                   fill="transparent"
                   tabIndex={hasData ? 0 : undefined}
                   role={hasData ? 'img' : undefined}
@@ -89,7 +90,7 @@ export function RidesByHourChart({
             <text
               key={hour}
               x={hour * hourWidth + hourWidth / 2}
-              y={PLOT_HEIGHT + 16}
+              y={plotHeight + 16}
               className="axis-label x-axis-label"
             >
               {formatHourLabel(hour)}

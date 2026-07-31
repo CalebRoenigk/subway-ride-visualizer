@@ -1,7 +1,13 @@
+.type-distribution {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
 .type-distribution-bar {
   display: flex;
   width: 100%;
-  height: 48px;
+  height: 56px;
   border-radius: 8px;
   overflow: hidden;
 }
@@ -19,9 +25,16 @@
 
 .type-distribution-label {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 1px;
   font-size: 13px;
   font-weight: 600;
+  line-height: 1.2;
   white-space: nowrap;
+}
+
+.type-distribution-key {
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--border);
 }

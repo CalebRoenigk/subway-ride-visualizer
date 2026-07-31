@@ -16,9 +16,18 @@ export function LineSelectControl({
     <label className="timeline-control">
       <span className="timeline-control-label">Line</span>
       <span className="line-select-wrap">
-        <select
-          className="line-select"
+        <span
+          className="line-select-visual"
           style={{ background: meta.color, color: getContrastText(meta.color) }}
+          aria-hidden="true"
+        >
+          {value}
+        </span>
+        <span className="line-select-chevron" aria-hidden="true">
+          ⌄
+        </span>
+        <select
+          className="line-select-native"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           aria-label="Select a line"
@@ -29,9 +38,6 @@ export function LineSelectControl({
             </option>
           ))}
         </select>
-        <span className="line-select-chevron" aria-hidden="true">
-          ⌄
-        </span>
       </span>
     </label>
   )

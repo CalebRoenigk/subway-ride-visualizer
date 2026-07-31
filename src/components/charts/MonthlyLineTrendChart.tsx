@@ -23,25 +23,9 @@ interface Point {
   value: number
 }
 
-// Catmull-Rom -> cubic Bezier conversion for a smooth (not sharply angular)
-// line, matching the wireframe's curved trend lines.
-function smoothPath(points: Point[]): string {
+function linePath(points: Point[]): string {
   if (points.length === 0) return ''
-  if (points.length === 1) return `M${points[0].x},${points[0].y}`
-
-  let d = `M${points[0].x},${points[0].y}`
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[i - 1] ?? points[i]
-    const p1 = points[i]
-    const p2 = points[i + 1]
-    const p3 = points[i + 2] ?? p2
-    const cp1x = p1.x + (p2.x - p0.x) / 6
-    const cp1y = p1.y + (p2.y - p0.y) / 6
-    const cp2x = p2.x - (p3.x - p1.x) / 6
-    const cp2y = p2.y - (p3.y - p1.y) / 6
-    d += ` C${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`
-  }
-  return d
+  return points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x},${p.y}`).join(' ')
 }
 
 interface MonthlyLineTrendChartProps {
@@ -92,7 +76,7 @@ export function MonthlyLineTrendChart({
           y: yScale(bucket.counts.get(categoryId) ?? 0),
           value: bucket.counts.get(categoryId) ?? 0,
         }))
-        return { categoryId, points, d: smoothPath(points) }
+        return { categoryId, points, d: linePath(points) }
       }),
     [buckets, categories, plotWidth, niceMax],
   )
@@ -176,7 +160,7 @@ export function MonthlyLineTrendChart({
             <foreignObject
               key={categoryId}
               x={peak.x - 10}
-              y={peak.y < 24 ? peak.y + 8 : peak.y - 28}
+              y={Math.max(peak.y - 10, 2)}
               width={20}
               height={20}
               className="trend-peak-label"

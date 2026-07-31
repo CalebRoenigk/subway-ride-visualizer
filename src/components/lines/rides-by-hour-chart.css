@@ -3,3 +3,8 @@
   transform: translateX(-50%);
   min-width: 80px;
 }
+
+.hour-chart-fill {
+  flex: 1;
+  min-height: 0;
+}

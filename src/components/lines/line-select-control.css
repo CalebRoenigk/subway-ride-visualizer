@@ -1,28 +1,48 @@
 .line-select-wrap {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
   border: 1px solid var(--border);
   border-radius: var(--radius-pill);
   padding: 4px 10px 4px 4px;
+  cursor: pointer;
 }
 
-.line-select {
-  appearance: none;
-  -webkit-appearance: none;
+.line-select-wrap:hover {
+  border-color: var(--border-strong);
+}
+
+.line-select-wrap:focus-within {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.line-select-visual {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: none;
   font-weight: 700;
   font-size: 13px;
-  text-align: center;
-  text-align-last: center;
-  cursor: pointer;
+  flex-shrink: 0;
 }
 
 .line-select-chevron {
   color: var(--text-muted);
   font-size: 14px;
   line-height: 1;
+}
+
+.line-select-native {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  appearance: none;
 }
