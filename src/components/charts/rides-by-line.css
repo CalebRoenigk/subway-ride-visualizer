@@ -18,11 +18,16 @@
   font-weight: 600;
   color: var(--text-secondary);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  background: transparent;
-  padding: 5px 10px;
+  border-radius: 8px;
+  background: var(--surface-1);
+  padding: 6px 12px;
   cursor: pointer;
   white-space: nowrap;
+  transition:
+    border-color 0.12s ease,
+    color 0.12s ease,
+    background 0.12s ease,
+    box-shadow 0.12s ease;
 }
 
 .legend-toggle-all:hover {
@@ -30,9 +35,20 @@
   color: var(--text-primary);
 }
 
+.legend-toggle-all:active {
+  transform: scale(0.97);
+}
+
 .legend-toggle-all:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 2px;
+  outline: none;
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 3px var(--gridline);
+}
+
+.legend-toggle-all.is-active {
+  background: var(--gridline);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
 }
 
 .legend-item {
@@ -43,16 +59,23 @@
 .legend-item--toggle {
   border: none;
   background: transparent;
-  padding: 2px;
+  padding: 3px;
   border-radius: 50%;
   cursor: pointer;
+  transition:
+    background 0.12s ease,
+    transform 0.08s ease;
 }
 
 .legend-item--toggle:hover {
-  opacity: 0.8;
+  background: var(--gridline);
+}
+
+.legend-item--toggle:active {
+  transform: scale(0.92);
 }
 
 .legend-item--toggle:focus-visible {
-  outline: 2px solid var(--text-primary);
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: 0 0 0 3px var(--gridline);
 }

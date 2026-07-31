@@ -320,7 +320,13 @@
   cursor: pointer;
   transition:
     opacity 0.1s ease,
-    border-color 0.1s ease;
+    border-color 0.1s ease,
+    transform 0.08s ease;
+}
+
+.range-picker-cancel:active,
+.range-picker-apply:active {
+  transform: scale(0.97);
 }
 
 .range-picker-cancel {

@@ -94,7 +94,7 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
         <div className="rides-by-line-legend">
           <button
             type="button"
-            className="legend-toggle-all"
+            className={`legend-toggle-all ${hiddenLines.size > 0 ? 'is-active' : ''}`}
             onClick={toggleAll}
           >
             {allHidden ? 'Show All' : 'Hide All'}
