@@ -1,0 +1,14 @@
+{
+  "cursor": "2026-07-31T01:57:21.000Z",
+  "recordIdsAtCursor": [
+    "reczV7GErQpX9N365"
+  ],
+  "lastRunAt": "2026-08-01T22:31:45.683Z",
+  "lastRun": {
+    "mode": "bootstrap",
+    "fetched": 1248,
+    "appended": 4,
+    "skippedIncomplete": 0,
+    "skippedAlreadySynced": 0
+  }
+}
