@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  actions: write # needed to explicitly dispatch deploy.yml below
 
 concurrency:
   group: sync-airtable
@@ -30,6 +31,7 @@ jobs:
         run: node scripts/sync-airtable.mjs
 
       - name: Commit and push if changed
+        id: commit
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git config user.name "github-actions[bot]"
@@ -37,6 +39,18 @@ jobs:
             git add public/data/rides.csv scripts/airtable-sync-state.json
             git commit -m "Sync rides from Airtable"
             git push
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
           else
             echo "No changes to commit."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
           fi
+
+      # Commits made with the default GITHUB_TOKEN don't trigger other
+      # workflows' `on: push` (an anti-recursion safeguard), so deploy.yml
+      # would otherwise never run for this push. Trigger it explicitly so a
+      # real `npm run build` always follows a sync that changes rides.csv.
+      - name: Trigger deploy
+        if: steps.commit.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main
