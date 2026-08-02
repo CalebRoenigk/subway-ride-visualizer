@@ -3,12 +3,12 @@
   "recordIdsAtCursor": [
     "reczV7GErQpX9N365"
   ],
-  "lastRunAt": "2026-08-01T22:31:45.683Z",
+  "lastRunAt": "2026-08-02T12:04:34.052Z",
   "lastRun": {
-    "mode": "bootstrap",
-    "fetched": 1248,
-    "appended": 4,
+    "mode": "incremental",
+    "fetched": 1,
+    "appended": 0,
     "skippedIncomplete": 0,
-    "skippedAlreadySynced": 0
+    "skippedAlreadySynced": 1
   }
 }
