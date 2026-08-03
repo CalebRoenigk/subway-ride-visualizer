@@ -49,8 +49,29 @@ jobs:
       # workflows' `on: push` (an anti-recursion safeguard), so deploy.yml
       # would otherwise never run for this push. Trigger it explicitly so a
       # real `npm run build` always follows a sync that changes rides.csv.
-      - name: Trigger deploy
+      #
+      # Observed in practice: even after deploy.yml reports success (build +
+      # deploy-pages both green), the live page has sometimes still ended up
+      # serving the raw, unbuilt index.html shortly after — something in
+      # GitHub Pages' own async publish step occasionally lands after (and
+      # overwrites) our correct deploy. Root cause unconfirmed, so guard
+      # against it directly: verify the live site actually reflects a real
+      # build afterward, and re-trigger if it doesn't.
+      - name: Trigger deploy and verify it goes live
         if: steps.commit.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh workflow run deploy.yml --ref main
+        run: |
+          gh workflow run deploy.yml --ref main
+          for attempt in 1 2 3 4 5; do
+            sleep 45
+            if curl -s "https://calebroenigk.github.io/subway-ride-visualizer/?cachebust=$(date +%s%N)" | grep -q 'src/main.tsx'; then
+              echo "Attempt $attempt: site still serving unbuilt source, re-triggering deploy."
+              gh workflow run deploy.yml --ref main
+            else
+              echo "Attempt $attempt: site verified live with a real build."
+              exit 0
+            fi
+          done
+          echo "::error::Site still appears to be serving unbuilt source after retries — needs manual investigation."
+          exit 1
