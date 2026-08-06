@@ -10,6 +10,11 @@ const CATEGORY_ORDER: AchievementCategory[] = [
   'trainset',
   'line',
   'car-type',
+  'streak',
+  'weekend',
+  'explorer',
+  'time-of-day',
+  'sequence',
   'pattern',
 ]
 
@@ -20,6 +25,11 @@ const CATEGORY_LABELS: Record<AchievementCategory, string> = {
   trainset: 'Trainset Completion',
   line: 'Line Completion',
   'car-type': 'Car Type',
+  streak: 'Streaks',
+  weekend: 'Weekend Rides',
+  explorer: 'Daily Explorer',
+  'time-of-day': 'Time of Day',
+  sequence: 'Sequences',
   pattern: 'Number Patterns',
 }
 
@@ -39,8 +49,8 @@ export function BadgeGallery({ badges, newIds }: { badges: BadgeState[]; newIds?
         return (
           <Card key={category} title={CATEGORY_LABELS[category]} meta={`${earnedCount}/${group.length}`}>
             <div className="badge-gallery-grid">
-              {group.map((badge) => (
-                <BadgeTile key={badge.def.id} badge={badge} isNew={newIds?.has(badge.def.id)} />
+              {group.map((badge, index) => (
+                <BadgeTile key={badge.def.id} badge={badge} isNew={newIds?.has(badge.def.id)} index={index} />
               ))}
             </div>
           </Card>

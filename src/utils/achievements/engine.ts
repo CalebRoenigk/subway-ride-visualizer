@@ -2,6 +2,7 @@ import type { Ride } from '../../types/ride'
 import type { FleetRecord } from '../../data/loadFleet'
 import { buildCarTypeIndex } from '../../data/loadFleet'
 import { LINES } from '../../data/lines'
+import { addDays, isWeekend, startOfDay } from '../date'
 import type { AchievementsSummary, BadgeState, BadgeStatus } from '../../types/achievement'
 import { buildCatalog } from './catalog'
 import { digitModeCount } from './predicates'
@@ -65,8 +66,33 @@ function replayFirstSeenMilestones(
   return { finalValue, earnedAtByThreshold }
 }
 
-function firstMatchingRide(sortedRides: Ride[], match: (carNumber: string) => boolean): Ride | undefined {
-  return sortedRides.find((ride) => match(ride.carNumber))
+function firstMatchingRide(
+  sortedRides: Ride[],
+  match: (ride: Ride, index: number, rides: Ride[]) => boolean,
+): Ride | undefined {
+  return sortedRides.find((ride, index) => match(ride, index, sortedRides))
+}
+
+// Longest run of consecutive calendar days containing at least one ride.
+function replayLongestStreak(sortedRides: Ride[], thresholds: number[]): FamilyResult {
+  const sortedThresholds = [...thresholds].sort((a, b) => a - b)
+  const earnedAtByThreshold = new Map<number, Date>()
+  let longestStreak = 0
+  let currentStreak = 0
+  let lastDay: Date | null = null
+  let nextIdx = 0
+  for (const ride of sortedRides) {
+    const day = startOfDay(ride.timestamp)
+    if (lastDay && day.getTime() === lastDay.getTime()) continue
+    currentStreak = lastDay && day.getTime() === addDays(lastDay, 1).getTime() ? currentStreak + 1 : 1
+    lastDay = day
+    if (currentStreak > longestStreak) longestStreak = currentStreak
+    while (nextIdx < sortedThresholds.length && longestStreak >= sortedThresholds[nextIdx]) {
+      earnedAtByThreshold.set(sortedThresholds[nextIdx], ride.timestamp)
+      nextIdx++
+    }
+  }
+  return { finalValue: longestStreak, earnedAtByThreshold }
 }
 
 export function computeAchievements(rides: Ride[], fleet: FleetRecord[]): AchievementsSummary {
@@ -204,6 +230,41 @@ export function computeAchievements(rides: Ride[], fleet: FleetRecord[]): Achiev
         if (!type) return null
         typesRidden.add(type)
         return typesRidden.size
+      }),
+    )
+  }
+
+  const streakThresholds = thresholdsByFamily.get('streak')
+  if (streakThresholds) {
+    familyResults.set('streak', replayLongestStreak(sortedRides, streakThresholds))
+  }
+
+  const weekendThresholds = thresholdsByFamily.get('weekend-rides')
+  if (weekendThresholds) {
+    let weekendCount = 0
+    familyResults.set(
+      'weekend-rides',
+      replayRunningMax(sortedRides, weekendThresholds, (ride) => {
+        if (isWeekend(ride.timestamp)) weekendCount += 1
+        return weekendCount
+      }),
+    )
+  }
+
+  const dailyLinesThresholds = thresholdsByFamily.get('daily-lines')
+  if (dailyLinesThresholds) {
+    let currentDay = 0
+    let linesToday = new Set<string>()
+    familyResults.set(
+      'daily-lines',
+      replayRunningMax(sortedRides, dailyLinesThresholds, (ride) => {
+        const day = startOfDay(ride.timestamp).getTime()
+        if (day !== currentDay) {
+          currentDay = day
+          linesToday = new Set()
+        }
+        linesToday.add(ride.line)
+        return linesToday.size
       }),
     )
   }

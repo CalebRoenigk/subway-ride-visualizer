@@ -1,7 +1,9 @@
 .achievements-header {
-  background: var(--text-primary);
-  color: var(--surface-1);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
   border-radius: var(--radius-card);
+  box-shadow: var(--shadow-sm);
   padding: var(--space-5) var(--space-5) var(--space-4);
   display: flex;
   justify-content: space-between;
@@ -33,27 +35,42 @@
   font-variant-numeric: tabular-nums;
 }
 
-.achievements-ticks {
-  display: flex;
-  gap: 3px;
+.achievements-xp-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: var(--gridline);
   margin-top: var(--space-1);
+  overflow: hidden;
 }
 
-.achievements-tick {
-  width: 9px;
-  height: 16px;
-  background: color-mix(in srgb, var(--surface-1) 18%, transparent);
-}
-
-.achievements-tick.is-lit {
+.achievements-xp-bar i {
+  display: block;
+  height: 100%;
   background: var(--achievement-accent);
+  border-radius: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .achievements-xp-bar i {
+    transform-origin: left;
+    animation: achievements-xp-bar-grow 900ms ease-out;
+  }
+}
+
+@keyframes achievements-xp-bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
 }
 
 .achievements-xp-caption {
   font-family: ui-monospace, monospace;
   font-size: 11.5px;
   letter-spacing: 0.02em;
-  color: color-mix(in srgb, var(--surface-1) 72%, transparent);
+  color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
 
@@ -75,17 +92,18 @@
   font-size: 10.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: color-mix(in srgb, var(--surface-1) 60%, transparent);
+  color: var(--text-muted);
 }
 
 .achievements-xp-total {
-  border: 1px solid color-mix(in srgb, var(--surface-1) 35%, transparent);
+  border: 1px solid var(--border-strong);
   border-radius: 4px;
   padding: 3px 10px;
   font-family: ui-monospace, monospace;
   font-size: 11px;
   letter-spacing: 0.04em;
   margin-top: var(--space-1);
+  color: var(--text-secondary);
 }
 
 @media (max-width: 560px) {

@@ -8,6 +8,7 @@ import { AchievementsHeader } from '../components/achievements/AchievementsHeade
 import { RecentBadgesFeed } from '../components/achievements/RecentBadgesFeed'
 import { AlmostThereFeed } from '../components/achievements/AlmostThereFeed'
 import { BadgeGallery } from '../components/achievements/BadgeGallery'
+import './achievements.css'
 
 export function Achievements() {
   const { rides, loading: ridesLoading } = useRides()
@@ -48,7 +49,7 @@ export function Achievements() {
   const earnedCount = summary.badges.filter((b) => b.status === 'earned').length
 
   return (
-    <div className="page-stack">
+    <div className="page-stack achievements-page">
       <AchievementsHeader
         level={summary.level}
         xpIntoLevel={summary.xpIntoLevel}

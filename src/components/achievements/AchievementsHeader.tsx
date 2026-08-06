@@ -9,8 +9,6 @@ interface AchievementsHeaderProps {
   totalCount: number
 }
 
-const TICK_COUNT = 24
-
 export function AchievementsHeader({
   level,
   xpIntoLevel,
@@ -19,18 +17,15 @@ export function AchievementsHeader({
   earnedCount,
   totalCount,
 }: AchievementsHeaderProps) {
-  const litTicks =
-    xpForNextLevel > 0 ? Math.round((xpIntoLevel / xpForNextLevel) * TICK_COUNT) : TICK_COUNT
+  const pct = xpForNextLevel > 0 ? Math.min((xpIntoLevel / xpForNextLevel) * 100, 100) : 100
 
   return (
     <div className="achievements-header">
       <div className="achievements-header-left">
         <div className="achievements-eyebrow">Achievement Level</div>
         <div className="achievements-level">{String(level).padStart(2, '0')}</div>
-        <div className="achievements-ticks">
-          {Array.from({ length: TICK_COUNT }, (_, i) => (
-            <div key={i} className={i < litTicks ? 'achievements-tick is-lit' : 'achievements-tick'} />
-          ))}
+        <div className="achievements-xp-bar">
+          <i style={{ width: `${pct}%` }} />
         </div>
         <div className="achievements-xp-caption">
           {xpIntoLevel} / {xpForNextLevel} XP to Level {level + 1}

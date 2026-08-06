@@ -1,0 +1,29 @@
+@media (prefers-reduced-motion: no-preference) {
+  .achievements-page > * {
+    animation: achievements-section-in 480ms ease-out backwards;
+  }
+
+  .achievements-page > *:nth-child(1) {
+    animation-delay: 0ms;
+  }
+  .achievements-page > *:nth-child(2) {
+    animation-delay: 80ms;
+  }
+  .achievements-page > *:nth-child(3) {
+    animation-delay: 160ms;
+  }
+  .achievements-page > *:nth-child(4) {
+    animation-delay: 240ms;
+  }
+}
+
+@keyframes achievements-section-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

@@ -1,7 +1,7 @@
 import type { BadgeState } from '../../types/achievement'
 import { formatBadgeFraction } from '../../utils/achievements/format'
 import { Card } from '../common/Card'
-import { Hexagon } from './Hexagon'
+import { BadgeShape } from './BadgeShape'
 import './almost-there-feed.css'
 
 export function AlmostThereFeed({ badges }: { badges: BadgeState[] }) {
@@ -15,7 +15,7 @@ export function AlmostThereFeed({ badges }: { badges: BadgeState[] }) {
           return (
             <div className="almost-there-row" key={badge.def.id}>
               <div className="almost-there-icon">
-                <Hexagon status="in-progress" fillPct={pct} />
+                <BadgeShape status="in-progress" rarity={badge.def.rarity} fillPct={pct} />
               </div>
               <div className="almost-there-body">
                 <div className="almost-there-label">{badge.def.label}</div>

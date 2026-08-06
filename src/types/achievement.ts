@@ -1,3 +1,5 @@
+import type { Ride } from './ride'
+
 export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary'
 
 export type AchievementCategory =
@@ -8,6 +10,11 @@ export type AchievementCategory =
   | 'line'
   | 'car-type'
   | 'pattern'
+  | 'streak'
+  | 'weekend'
+  | 'explorer'
+  | 'time-of-day'
+  | 'sequence'
 
 export type BadgeStatus = 'locked' | 'in-progress' | 'earned'
 
@@ -34,7 +41,10 @@ export interface ThresholdBadgeDef extends BaseBadgeDef {
 
 export interface PredicateBadgeDef extends BaseBadgeDef {
   kind: 'predicate'
-  match: (carNumber: string) => boolean
+  /** Sees the full ride and its position in ride history, so predicates can
+   *  key off timing (time of day) or sequence (the previous ride), not just
+   *  the car number. */
+  match: (ride: Ride, index: number, rides: Ride[]) => boolean
   /** Short hint shown while locked (e.g. the exact number to look for). */
   hint?: string
 }

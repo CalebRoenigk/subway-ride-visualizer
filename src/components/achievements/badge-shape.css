@@ -1,0 +1,48 @@
+.badge-shape {
+  display: block;
+  flex: none;
+  line-height: 0;
+}
+
+.badge-shape svg {
+  display: block;
+}
+
+.badge-shape--glow svg {
+  filter: drop-shadow(0 0 3px var(--achievement-accent));
+}
+
+.badge-shape--legendary-earned svg {
+  filter: drop-shadow(0 0 3px var(--achievement-accent)) drop-shadow(0 0 7px var(--achievement-accent));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .badge-shape--legendary-earned svg {
+    animation: badge-shape-pulse 2.4s ease-in-out infinite;
+  }
+
+  .badge-shape-fill {
+    transform-box: fill-box;
+    transform-origin: center bottom;
+    animation: badge-shape-fill-grow 700ms ease-out;
+  }
+}
+
+@keyframes badge-shape-pulse {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px var(--achievement-accent)) drop-shadow(0 0 7px var(--achievement-accent));
+  }
+  50% {
+    filter: drop-shadow(0 0 5px var(--achievement-accent)) drop-shadow(0 0 12px var(--achievement-accent));
+  }
+}
+
+@keyframes badge-shape-fill-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}

@@ -47,6 +47,22 @@
   background: var(--text-primary);
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  .almost-there-bar i {
+    transform-origin: left;
+    animation: almost-there-bar-grow 700ms ease-out;
+  }
+}
+
+@keyframes almost-there-bar-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
 .almost-there-frac {
   flex: none;
   font-family: ui-monospace, monospace;

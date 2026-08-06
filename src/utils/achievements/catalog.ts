@@ -2,6 +2,7 @@ import type { BadgeDef, PredicateBadgeDef, Rarity, ThresholdBadgeDef } from '../
 import type { FleetRecord } from '../../data/loadFleet'
 import { buildCarTypeIndex } from '../../data/loadFleet'
 import { LINES } from '../../data/lines'
+import type { Ride } from '../../types/ride'
 import { FUNNY_NUMBERS } from './funnyNumbers'
 import {
   hasRepeatingPairPattern,
@@ -10,6 +11,7 @@ import {
   isPalindrome,
   isRoundNumber,
 } from './predicates'
+import { isBackToBack, isEarlyBird, isNightOwl } from './timePredicates'
 
 const RARITY_XP: Record<Rarity, number> = {
   common: 10,
@@ -46,7 +48,32 @@ function predicate(
   label: string,
   description: string,
   rarity: Rarity,
-  match: (carNumber: string) => boolean,
+  matchCarNumber: (carNumber: string) => boolean,
+  hint?: string,
+): PredicateBadgeDef {
+  return {
+    kind: 'predicate',
+    id,
+    familyId: id,
+    category,
+    label,
+    description,
+    rarity,
+    xp: RARITY_XP[rarity],
+    match: (ride) => matchCarNumber(ride.carNumber),
+    hint,
+  }
+}
+
+// Like predicate(), but the matcher sees the full ride (and its neighbors
+// in history) instead of just a car number — for timing/sequence badges.
+function ridePredicate(
+  id: string,
+  category: PredicateBadgeDef['category'],
+  label: string,
+  description: string,
+  rarity: Rarity,
+  match: (ride: Ride, index: number, rides: Ride[]) => boolean,
   hint?: string,
 ): PredicateBadgeDef {
   return {
@@ -116,7 +143,7 @@ export function buildCatalog(fleet: FleetRecord[]): BadgeDef[] {
     // Number patterns
     threshold('repeated-digit', 'pattern', 2, 'Double Take', 'Ride a car with 2 matching digits', 'common'),
     threshold('repeated-digit', 'pattern', 3, 'Triple Threat', 'Ride a car with 3 matching digits', 'uncommon'),
-    threshold('repeated-digit', 'pattern', 4, 'Quadruple Whammy', 'Ride a car with 4 matching digits', 'rare'),
+    threshold('repeated-digit', 'pattern', 4, 'Quadruple Whammy', 'Ride a car with all 4 digits the same (e.g. 4444)', 'rare'),
     predicate('pattern-palindrome', 'pattern', 'Mirror Image', 'Ride a car number that reads the same both ways', 'uncommon', isPalindrome),
     predicate('pattern-repeating-pair', 'pattern', 'Echo', "Ride a car number formed from a repeating block (e.g. 4545)", 'rare', hasRepeatingPairPattern),
     predicate('pattern-round-number', 'pattern', 'Round Trip', "Ride a car number ending in '00'", 'common', isRoundNumber),
@@ -124,6 +151,38 @@ export function buildCatalog(fleet: FleetRecord[]): BadgeDef[] {
     predicate('pattern-descending', 'pattern', 'Countdown', 'Ride a car number with descending consecutive digits', 'epic', isDescendingRun),
     ...FUNNY_NUMBERS.map((f) =>
       predicate(f.id, 'pattern', f.label, f.description, 'epic', (carNumber) => carNumber === f.value, f.value),
+    ),
+
+    // Consecutive-day riding streaks
+    threshold('streak', 'streak', 3, 'On a Streak', 'Ride on 3 consecutive days', 'common'),
+    threshold('streak', 'streak', 7, 'Week Strong', 'Ride on 7 consecutive days', 'uncommon'),
+    threshold('streak', 'streak', 14, 'Two-Week Tear', 'Ride on 14 consecutive days', 'rare'),
+    threshold('streak', 'streak', 30, 'Monthlong Marathon', 'Ride on 30 consecutive days', 'legendary'),
+
+    // Rides logged specifically on Saturdays/Sundays
+    threshold('weekend-rides', 'weekend', 5, 'Weekend Warrior', 'Log 5 rides on a weekend', 'common'),
+    threshold('weekend-rides', 'weekend', 25, 'Weekend Regular', 'Log 25 rides on a weekend', 'uncommon'),
+    threshold('weekend-rides', 'weekend', 100, 'Weekend Devotee', 'Log 100 rides on a weekend', 'rare'),
+    threshold('weekend-rides', 'weekend', 250, 'No Weekdays Needed', 'Log 250 rides on a weekend', 'epic'),
+
+    // Distinct lines ridden within a single calendar day
+    threshold('daily-lines', 'explorer', 3, 'Day Tripper', 'Ride 3 different lines in a single day', 'common'),
+    threshold('daily-lines', 'explorer', 5, 'Line Hopper', 'Ride 5 different lines in a single day', 'uncommon'),
+    threshold('daily-lines', 'explorer', 8, 'Grand Tour', 'Ride 8 different lines in a single day', 'rare'),
+    threshold('daily-lines', 'explorer', 12, 'System Sweep', 'Ride 12 different lines in a single day', 'epic'),
+
+    // Time-of-day one-offs
+    ridePredicate('time-early-bird', 'time-of-day', 'Early Bird', 'Ride a car before 6am', 'common', isEarlyBird),
+    ridePredicate('time-night-owl', 'time-of-day', 'Night Owl', 'Ride a car between midnight and 4am', 'uncommon', isNightOwl),
+
+    // Sequence: back-to-back rides on consecutively-numbered cars
+    ridePredicate(
+      'sequence-back-to-back',
+      'sequence',
+      'Back to Back',
+      'Ride two consecutively-numbered cars back-to-back',
+      'epic',
+      isBackToBack,
     ),
   ]
 
