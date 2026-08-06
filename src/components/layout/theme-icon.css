@@ -1,0 +1,35 @@
+.theme-icon {
+  overflow: visible;
+}
+
+.theme-icon-rays {
+  stroke-dasharray: 2;
+  stroke-dashoffset: 0;
+  opacity: 1;
+  transition:
+    stroke-dashoffset 0.35s ease,
+    opacity 0.3s ease;
+}
+
+.theme-icon-body {
+  r: 4;
+  transition: r 0.35s ease;
+}
+
+.theme-icon-bite {
+  r: 0;
+  transition: r 0.35s ease;
+}
+
+.theme-icon.is-dark .theme-icon-rays {
+  stroke-dashoffset: 2;
+  opacity: 0;
+}
+
+.theme-icon.is-dark .theme-icon-body {
+  r: 7;
+}
+
+.theme-icon.is-dark .theme-icon-bite {
+  r: 5;
+}

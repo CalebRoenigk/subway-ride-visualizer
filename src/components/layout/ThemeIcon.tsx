@@ -1,0 +1,36 @@
+import './theme-icon.css'
+
+export function ThemeIcon({ isDark }: { isDark: boolean }) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      className={`theme-icon ${isDark ? 'is-dark' : ''}`}
+      aria-hidden="true"
+    >
+      <mask id="theme-icon-bite-mask">
+        <rect x="0" y="0" width="24" height="24" fill="white" />
+        <circle className="theme-icon-bite" cx="15.5" cy="8.2" r="0" fill="black" />
+      </mask>
+      <circle
+        className="theme-icon-body"
+        cx="12"
+        cy="12"
+        r="4"
+        fill="currentColor"
+        mask="url(#theme-icon-bite-mask)"
+      />
+      <g className="theme-icon-rays" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+        <line x1="12" y1="2" x2="12" y2="4" />
+        <line x1="12" y1="20" x2="12" y2="22" />
+        <line x1="4.93" y1="4.93" x2="6.34" y2="6.34" />
+        <line x1="17.66" y1="17.66" x2="19.07" y2="19.07" />
+        <line x1="2" y1="12" x2="4" y2="12" />
+        <line x1="20" y1="12" x2="22" y2="12" />
+        <line x1="6.34" y1="17.66" x2="4.93" y2="19.07" />
+        <line x1="19.07" y1="4.93" x2="17.66" y2="6.34" />
+      </g>
+    </svg>
+  )
+}
