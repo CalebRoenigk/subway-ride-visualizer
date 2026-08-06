@@ -1,7 +1,8 @@
 .trainset-row {
   display: flex;
-  gap: var(--space-2);
   flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
 }
 
 .trainset-tile {
@@ -10,9 +11,9 @@
   align-items: center;
   justify-content: center;
   gap: 2px;
-  min-width: 64px;
+  flex: 0 1 64px;
+  min-width: 56px;
   max-width: 160px;
-  flex: 1;
   padding: var(--space-3) var(--space-2);
   border-radius: 8px;
   transition:
@@ -20,9 +21,19 @@
     box-shadow 0.12s ease;
 }
 
-.trainset-tile:hover {
+.trainset-tile.is-clickable {
+  cursor: pointer;
+}
+
+.trainset-tile.is-clickable:hover,
+.trainset-tile.is-clickable:focus-visible {
   transform: scale(1.03);
   box-shadow: var(--shadow-sm);
+}
+
+.trainset-tile.is-clickable:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
 }
 
 .trainset-tile-car {

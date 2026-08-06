@@ -11,16 +11,19 @@ export function TrainsetRow({
   consist,
   searchedCar,
   countOf,
+  onSelectCar,
 }: {
   consist: FleetRecord
   searchedCar: string
   countOf: (carNumber: string) => number
+  onSelectCar?: (unit: string) => void
 }) {
   return (
     <div className="trainset-row">
       {consist.unitNumbers.map((unit) => {
         const count = countOf(unit)
         const isSearched = unit === searchedCar
+        const isClickable = !isSearched && count > 0
         const background = isSearched
           ? 'var(--text-primary)'
           : count > 0
@@ -35,8 +38,21 @@ export function TrainsetRow({
         return (
           <div
             key={unit}
-            className={`trainset-tile ${isSearched ? 'is-searched' : ''}`}
+            className={`trainset-tile ${isSearched ? 'is-searched' : ''} ${isClickable ? 'is-clickable' : ''}`}
             style={{ background, color }}
+            role={isClickable ? 'button' : undefined}
+            tabIndex={isClickable ? 0 : undefined}
+            onClick={isClickable ? () => onSelectCar?.(unit) : undefined}
+            onKeyDown={
+              isClickable
+                ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      onSelectCar?.(unit)
+                    }
+                  }
+                : undefined
+            }
           >
             <span className="trainset-tile-car">{unit}</span>
             <span className="trainset-tile-count tabular">{count}</span>

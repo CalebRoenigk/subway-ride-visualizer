@@ -125,6 +125,7 @@ export function Lookup() {
                 consist={consist}
                 searchedCar={carNumber}
                 countOf={(unit) => carCounts.get(unit) ?? 0}
+                onSelectCar={setQuery}
               />
             </Card>
           )}
