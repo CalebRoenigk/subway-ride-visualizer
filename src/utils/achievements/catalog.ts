@@ -11,7 +11,7 @@ import {
   isPalindrome,
   isRoundNumber,
 } from './predicates'
-import { isBackToBack, isEarlyBird, isNightOwl } from './timePredicates'
+import { isBackToBack, isEarlyBird, isHighNoon, isNightOwl, isUTurn, makeRapidTriple } from './timePredicates'
 
 const RARITY_XP: Record<Rarity, number> = {
   common: 10,
@@ -174,6 +174,7 @@ export function buildCatalog(fleet: FleetRecord[]): BadgeDef[] {
     // Time-of-day one-offs
     ridePredicate('time-early-bird', 'time-of-day', 'Early Bird', 'Ride a car before 6am', 'common', isEarlyBird),
     ridePredicate('time-night-owl', 'time-of-day', 'Night Owl', 'Ride a car between midnight and 4am', 'uncommon', isNightOwl),
+    ridePredicate('time-high-noon', 'time-of-day', 'High Noon', 'Ride a car logged at exactly 12:00pm', 'epic', isHighNoon),
 
     // Sequence: back-to-back rides on consecutively-numbered cars
     ridePredicate(
@@ -183,6 +184,42 @@ export function buildCatalog(fleet: FleetRecord[]): BadgeDef[] {
       'Ride two consecutively-numbered cars back-to-back',
       'epic',
       isBackToBack,
+    ),
+
+    // Sequence: 3 rides logged within a shrinking time window
+    ridePredicate(
+      'rapid-rides-60',
+      'sequence',
+      'Quick Succession',
+      'Log 3 rides within 1 hour of each other',
+      'rare',
+      makeRapidTriple(60),
+    ),
+    ridePredicate(
+      'rapid-rides-30',
+      'sequence',
+      'Rapid Succession',
+      'Log 3 rides within 30 minutes of each other',
+      'epic',
+      makeRapidTriple(30),
+    ),
+    ridePredicate(
+      'rapid-rides-15',
+      'sequence',
+      'Lightning Round',
+      'Log 3 rides within 15 minutes of each other',
+      'legendary',
+      makeRapidTriple(15),
+    ),
+
+    // Sequence: same line, back-to-back, inside 15 minutes
+    ridePredicate(
+      'sequence-u-turn',
+      'sequence',
+      'U-Turn',
+      'Ride the same line twice within 15 minutes',
+      'rare',
+      isUTurn,
     ),
   ]
 

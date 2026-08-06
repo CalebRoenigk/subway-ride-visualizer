@@ -2,6 +2,7 @@ import type { BadgeState } from '../../types/achievement'
 import { formatBadgeFraction } from '../../utils/achievements/format'
 import { Card } from '../common/Card'
 import { BadgeShape } from './BadgeShape'
+import { getBadgeIcon } from './badgeIcons'
 import './almost-there-feed.css'
 
 export function AlmostThereFeed({ badges }: { badges: BadgeState[] }) {
@@ -15,7 +16,12 @@ export function AlmostThereFeed({ badges }: { badges: BadgeState[] }) {
           return (
             <div className="almost-there-row" key={badge.def.id}>
               <div className="almost-there-icon">
-                <BadgeShape status="in-progress" rarity={badge.def.rarity} fillPct={pct} />
+                <BadgeShape
+                  status="in-progress"
+                  rarity={badge.def.rarity}
+                  fillPct={pct}
+                  icon={getBadgeIcon(badge.def.familyId)}
+                />
               </div>
               <div className="almost-there-body">
                 <div className="almost-there-label">{badge.def.label}</div>

@@ -1,4 +1,4 @@
-import { useId } from 'react'
+import { useId, type ReactNode } from 'react'
 import type { BadgeStatus, Rarity } from '../../types/achievement'
 import './badge-shape.css'
 
@@ -37,14 +37,19 @@ const ACCENTED: Record<Rarity, boolean> = {
   legendary: true,
 }
 
+// Icons are authored on a 24x24 grid; this centers that grid inside the
+// badge's 56x56 canvas at a size that fills it without touching the edges.
+const ICON_TRANSFORM = 'translate(14.2 14.2) scale(1.15)'
+
 interface BadgeShapeProps {
   status: BadgeStatus
   rarity: Rarity
   fillPct?: number
   size?: number
+  icon?: ReactNode
 }
 
-export function BadgeShape({ status, rarity, fillPct = 0, size = 56 }: BadgeShapeProps) {
+export function BadgeShape({ status, rarity, fillPct = 0, size = 56, icon }: BadgeShapeProps) {
   const clipId = useId()
   const path = SHAPE_PATHS[rarity]
   const strokeWidth = STROKE_WIDTH[rarity]
@@ -55,6 +60,8 @@ export function BadgeShape({ status, rarity, fillPct = 0, size = 56 }: BadgeShap
   const fillHeight = 56 * (clampedPct / 100)
   const fillY = 56 - fillHeight
   const glow = status === 'earned' && (rarity === 'epic' || rarity === 'legendary')
+
+  const iconColor = status === 'locked' ? 'var(--text-muted)' : status === 'earned' ? 'var(--surface-1)' : strokeColor
 
   return (
     <span
@@ -79,10 +86,31 @@ export function BadgeShape({ status, rarity, fillPct = 0, size = 56 }: BadgeShap
             <path d={path} fill="none" stroke={strokeColor} strokeWidth={strokeWidth} />
           </>
         )}
-        {status === 'earned' && (
-          <text x={28} y={34.5} textAnchor="middle" fontSize={18} fontWeight={900} fill="var(--surface-1)">
-            ✓
-          </text>
+        {icon && (
+          <>
+            {status === 'in-progress' && (
+              <g
+                transform={ICON_TRANSFORM}
+                fill="none"
+                stroke="var(--surface-1)"
+                strokeWidth={4.2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                {icon}
+              </g>
+            )}
+            <g
+              transform={ICON_TRANSFORM}
+              fill="none"
+              stroke={iconColor}
+              strokeWidth={1.7}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              {icon}
+            </g>
+          </>
         )}
       </svg>
     </span>

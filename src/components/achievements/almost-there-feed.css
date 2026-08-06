@@ -65,7 +65,7 @@
 
 .almost-there-frac {
   flex: none;
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   font-size: 13px;

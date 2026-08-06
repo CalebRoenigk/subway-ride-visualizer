@@ -2,6 +2,7 @@ import type { CSSProperties } from 'react'
 import type { BadgeState } from '../../types/achievement'
 import { formatBadgeFraction } from '../../utils/achievements/format'
 import { BadgeShape } from './BadgeShape'
+import { getBadgeIcon } from './badgeIcons'
 import './badge-tile.css'
 
 export function BadgeTile({ badge, isNew, index = 0 }: { badge: BadgeState; isNew?: boolean; index?: number }) {
@@ -13,7 +14,12 @@ export function BadgeTile({ badge, isNew, index = 0 }: { badge: BadgeState; isNe
       title={badge.def.description}
       style={{ '--i': index } as CSSProperties}
     >
-      <BadgeShape status={badge.status} rarity={badge.def.rarity} fillPct={pct} />
+      <BadgeShape
+        status={badge.status}
+        rarity={badge.def.rarity}
+        fillPct={pct}
+        icon={getBadgeIcon(badge.def.familyId)}
+      />
       <div className="badge-tile-label">{badge.def.label}</div>
       <div className="badge-tile-frac">{formatBadgeFraction(badge)}</div>
     </div>

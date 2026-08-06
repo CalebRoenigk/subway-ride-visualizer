@@ -2,6 +2,7 @@ import type { BadgeState } from '../../types/achievement'
 import { formatRideDate } from '../../utils/date'
 import { Card } from '../common/Card'
 import { BadgeShape } from './BadgeShape'
+import { getBadgeIcon } from './badgeIcons'
 import './recent-badges-feed.css'
 
 export function RecentBadgesFeed({ badges }: { badges: BadgeState[] }) {
@@ -13,7 +14,12 @@ export function RecentBadgesFeed({ badges }: { badges: BadgeState[] }) {
         <div className="recent-badges-row">
           {badges.map((badge) => (
             <div className="recent-badge-item" key={badge.def.id}>
-              <BadgeShape status="earned" rarity={badge.def.rarity} size={52} />
+              <BadgeShape
+                status="earned"
+                rarity={badge.def.rarity}
+                size={52}
+                icon={getBadgeIcon(badge.def.familyId)}
+              />
               <div className="recent-badge-when">
                 {badge.def.label}
                 <br />

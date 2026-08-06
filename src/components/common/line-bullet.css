@@ -3,8 +3,11 @@
   align-items: center;
   justify-content: center;
   border-radius: 50%;
+  font-family: var(--font-bullet);
   font-weight: 700;
   line-height: 1;
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
   flex-shrink: 0;
 }
 

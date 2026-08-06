@@ -21,7 +21,7 @@
 }
 
 .badge-tile-frac {
-  font-family: ui-monospace, monospace;
+  font-family: var(--font-mono);
   font-size: 10px;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
