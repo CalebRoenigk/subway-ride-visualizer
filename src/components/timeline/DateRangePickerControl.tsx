@@ -10,6 +10,7 @@ import {
   type RangePresetId,
 } from '../../utils/dateRangePresets'
 import { useDismissablePopover } from '../../utils/useDismissablePopover'
+import { ChevronIcon } from '../common/ChevronIcon'
 import './date-range-picker.css'
 
 const WEEKDAY_LABELS = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
@@ -149,8 +150,8 @@ export function DateRangePickerControl({
         <span className="range-picker-trigger-label">
           {preset === 'custom' ? formatRangeLabel(start, end) : RANGE_PRESET_LABELS[preset]}
         </span>
-        <span className={`range-picker-trigger-chevron ${open ? 'is-open' : ''}`} aria-hidden="true">
-          ⌄
+        <span className={`range-picker-trigger-chevron ${open ? 'is-open' : ''}`}>
+          <ChevronIcon />
         </span>
       </button>
 

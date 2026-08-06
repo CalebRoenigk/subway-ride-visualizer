@@ -1,4 +1,5 @@
 import { LineBullet } from '../common/LineBullet'
+import { ChevronIcon } from '../common/ChevronIcon'
 import { getContrastText, getLineMeta } from '../../data/lines'
 import { useDismissablePopover } from '../../utils/useDismissablePopover'
 import '../common/dropdown.css'
@@ -45,8 +46,8 @@ export function LineSelectControl({
               </span>
             ))}
           </span>
-          <span className={`line-select-chevron ${open ? 'is-open' : ''}`} aria-hidden="true">
-            ⌄
+          <span className={`line-select-chevron ${open ? 'is-open' : ''}`}>
+            <ChevronIcon />
           </span>
         </button>
 

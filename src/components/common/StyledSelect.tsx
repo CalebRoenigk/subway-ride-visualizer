@@ -1,4 +1,5 @@
 import { useDismissablePopover } from '../../utils/useDismissablePopover'
+import { ChevronIcon } from './ChevronIcon'
 import './dropdown.css'
 import './styled-select.css'
 
@@ -40,8 +41,8 @@ export function StyledSelect<T extends string>({
             </span>
           ))}
         </span>
-        <span className={`styled-select-chevron ${open ? 'is-open' : ''}`} aria-hidden="true">
-          ⌄
+        <span className={`styled-select-chevron ${open ? 'is-open' : ''}`}>
+          <ChevronIcon />
         </span>
       </button>
 

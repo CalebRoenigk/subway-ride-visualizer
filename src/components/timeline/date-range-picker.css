@@ -43,8 +43,10 @@
 }
 
 .range-picker-trigger-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   color: var(--text-muted);
-  font-size: 12px;
   transition: transform 0.15s ease;
 }
 
