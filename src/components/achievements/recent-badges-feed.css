@@ -1,0 +1,26 @@
+.recent-badges-row {
+  display: flex;
+  gap: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: var(--space-1);
+}
+
+.recent-badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 78px;
+}
+
+.recent-badge-when {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.recent-badges-empty {
+  color: var(--text-muted);
+  font-size: 13px;
+}

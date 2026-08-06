@@ -5,6 +5,7 @@ import { Timeline } from './pages/Timeline'
 import { Lines } from './pages/Lines'
 import { Lookup } from './pages/Lookup'
 import { RollingStock } from './pages/RollingStock'
+import { Achievements } from './pages/Achievements'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/lines" element={<Lines />} />
           <Route path="/rolling-stock" element={<RollingStock />} />
           <Route path="/lookup" element={<Lookup />} />
+          <Route path="/achievements" element={<Achievements />} />
         </Route>
       </Routes>
     </HashRouter>

@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { to: '/lines', label: 'Lines' },
   { to: '/rolling-stock', label: 'Rolling Stock' },
   { to: '/lookup', label: 'Lookup' },
+  { to: '/achievements', label: 'Achievements' },
 ]
 
 export function Sidebar() {
