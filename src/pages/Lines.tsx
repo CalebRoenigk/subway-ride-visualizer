@@ -4,7 +4,6 @@ import { getLineMeta } from '../data/lines'
 import { bucketRidesByMonth, bucketRidesByHour } from '../components/charts/chart-utils'
 import { Card } from '../components/common/Card'
 import { LineBullet } from '../components/common/LineBullet'
-import { LinesKey } from '../components/lines/LinesKey'
 import { LineMonthHeatmap } from '../components/lines/LineMonthHeatmap'
 import { TopLinesBar } from '../components/lines/TopLinesBar'
 import { RidesByHourChart } from '../components/lines/RidesByHourChart'
@@ -70,8 +69,6 @@ export function Lines() {
 
   return (
     <div className="page-stack">
-      <LinesKey />
-
       <Card title="Rides">
         <LineMonthHeatmap
           buckets={monthlyBuckets}
