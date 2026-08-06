@@ -50,28 +50,30 @@ jobs:
       # would otherwise never run for this push. Trigger it explicitly so a
       # real `npm run build` always follows a sync that changes rides.csv.
       #
-      # Observed in practice: even after deploy.yml reports success (build +
-      # deploy-pages both green), the live page has sometimes still ended up
-      # serving the raw, unbuilt index.html shortly after — something in
-      # GitHub Pages' own async publish step occasionally lands after (and
-      # overwrites) our correct deploy. Root cause unconfirmed, so guard
-      # against it directly: verify the live site actually reflects a real
-      # build afterward, and re-trigger if it doesn't.
+      # Observed in practice: deploy.yml's deploy-pages step can fail (e.g.
+      # a "Timeout reached, aborting!" from GitHub's Pages backend) or the
+      # live page can otherwise lag behind, leaving the site serving a
+      # stale but still-built prior version. Checking only for "not raw
+      # source" doesn't catch that. deploy.yml stamps dist/index.html with
+      # the commit SHA it was built from, so verify against that exact SHA
+      # and keep re-triggering until the live page actually reflects this
+      # commit.
       - name: Trigger deploy and verify it goes live
         if: steps.commit.outputs.pushed == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          SHA="$(git rev-parse HEAD)"
           gh workflow run deploy.yml --ref main
           for attempt in 1 2 3 4 5; do
             sleep 45
-            if curl -s "https://calebroenigk.github.io/subway-ride-visualizer/?cachebust=$(date +%s%N)" | grep -q 'src/main.tsx'; then
-              echo "Attempt $attempt: site still serving unbuilt source, re-triggering deploy."
-              gh workflow run deploy.yml --ref main
-            else
-              echo "Attempt $attempt: site verified live with a real build."
+            if curl -s "https://calebroenigk.github.io/subway-ride-visualizer/?cachebust=$(date +%s%N)" | grep -q "build-sha\" content=\"$SHA\""; then
+              echo "Attempt $attempt: site verified live with commit $SHA."
               exit 0
+            else
+              echo "Attempt $attempt: site not yet serving commit $SHA, re-triggering deploy."
+              gh workflow run deploy.yml --ref main
             fi
           done
-          echo "::error::Site still appears to be serving unbuilt source after retries — needs manual investigation."
+          echo "::error::Site never reflected commit $SHA after retries — deploy-pages may be failing (check the Actions tab), needs manual investigation."
           exit 1

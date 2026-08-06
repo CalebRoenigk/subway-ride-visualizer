@@ -63,6 +63,12 @@
   opacity: 1;
 }
 
+.stat-tile:last-child .stat-tile-info-bubble {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
 @media (max-width: 720px) {
   .stats-row {
     grid-template-columns: repeat(2, 1fr);

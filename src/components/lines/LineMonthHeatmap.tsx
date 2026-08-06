@@ -46,19 +46,27 @@ export function LineMonthHeatmap({
               const color = count > 0 ? getRideCountColor(count, maxValue, isDark) : undefined
               const pct = buckets.length > 1 ? bi / (buckets.length - 1) : 0.5
               const edgeClass = pct < 0.08 ? 'is-left-edge' : pct > 0.92 ? 'is-right-edge' : ''
+              const monthLabel = bucket.date.toLocaleDateString('en-US', {
+                month: 'long',
+                year: 'numeric',
+              })
               return (
                 <div
                   key={bucket.date.toISOString()}
                   className={`lmh-cell ${count === 0 ? 'is-empty' : ''} ${edgeClass}`}
                   style={color ? { background: color } : undefined}
                   tabIndex={count > 0 ? 0 : undefined}
+                  role={count > 0 ? 'img' : undefined}
+                  aria-label={
+                    count > 0
+                      ? `${id} line, ${monthLabel}: ${count} ${count === 1 ? 'ride' : 'rides'}`
+                      : undefined
+                  }
                 >
                   {count > 0 && (
-                    <div className="lmh-tooltip">
+                    <div className="lmh-tooltip" aria-hidden="true">
                       <div className="lmh-tooltip-line">{id}</div>
-                      <div>
-                        {bucket.date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
-                      </div>
+                      <div>{monthLabel}</div>
                       <div className="lmh-tooltip-count">
                         {count} {count === 1 ? 'ride' : 'rides'}
                       </div>

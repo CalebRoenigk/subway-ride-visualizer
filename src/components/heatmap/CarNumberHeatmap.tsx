@@ -127,14 +127,17 @@ export function CarNumberHeatmap({
 function HeatmapMark({ mark, color }: { mark: PlacedMark; color: string }) {
   const pct = (mark.col / (COLS - 1)) * 100
   const edgeClass = pct < 5 ? 'is-left-edge' : pct > 95 ? 'is-right-edge' : ''
+  const label = `Car ${mark.carNumber}: ${mark.count} ${mark.count === 1 ? 'ride' : 'rides'}, ${mark.line || 'Unknown'} line, ${mark.carType || 'Unknown'}, last ridden ${formatRideDate(mark.lastRidden)}`
 
   return (
     <div
       className={`heatmap-mark ${edgeClass}`}
       style={{ left: `${pct}%`, background: color }}
       tabIndex={0}
+      role="img"
+      aria-label={label}
     >
-      <div className="heatmap-tooltip">
+      <div className="heatmap-tooltip" aria-hidden="true">
         <div className="heatmap-tooltip-car">
           Car {mark.carNumber} · {mark.count} {mark.count === 1 ? 'ride' : 'rides'}
         </div>
