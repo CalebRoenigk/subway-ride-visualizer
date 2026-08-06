@@ -67,6 +67,19 @@
   transform-origin: top right;
 }
 
+@media (max-width: 680px) {
+  .range-picker-panel {
+    position: fixed;
+    top: 76px;
+    right: 16px;
+    left: 16px;
+    max-height: calc(100vh - 92px);
+    overflow-y: auto;
+    flex-direction: column;
+    transform-origin: top center;
+  }
+}
+
 @keyframes range-picker-pop {
   from {
     opacity: 0;
@@ -87,6 +100,17 @@
   padding: var(--space-3);
   border-right: 1px solid var(--border);
   background: var(--page-plane);
+}
+
+@media (max-width: 680px) {
+  .range-picker-presets {
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: auto;
+    gap: 6px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
 }
 
 .range-picker-preset {
@@ -122,6 +146,13 @@
   flex-direction: column;
   padding: var(--space-4) var(--space-5) var(--space-5);
   min-width: 500px;
+}
+
+@media (max-width: 680px) {
+  .range-picker-calendar {
+    min-width: 0;
+    padding: var(--space-4);
+  }
 }
 
 .range-picker-inputs {
@@ -179,6 +210,17 @@
 .range-picker-month {
   flex: 1;
   min-width: 210px;
+}
+
+@media (max-width: 680px) {
+  .range-picker-months {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .range-picker-month {
+    min-width: 0;
+  }
 }
 
 .range-picker-month-header {
