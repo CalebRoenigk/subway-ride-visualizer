@@ -37,18 +37,12 @@ export function RidesByLineChart({ rides }: { rides: Ride[] }) {
         : null,
     [rides],
   )
-  const latest = useMemo(
-    () =>
-      rides.length
-        ? new Date(Math.max(...rides.map((r) => r.timestamp.getTime())))
-        : new Date(),
-    [rides],
-  )
+  const today = useMemo(() => new Date(), [])
 
-  const start = rangeStart(preset, latest, earliest)
+  const start = rangeStart(preset, today, earliest)
   const buckets = useMemo(
-    () => bucketRidesByDay(rides, start, latest, getLine),
-    [rides, start, latest],
+    () => bucketRidesByDay(rides, start, today, getLine),
+    [rides, start, today],
   )
 
   const activeLines = useMemo(() => {
