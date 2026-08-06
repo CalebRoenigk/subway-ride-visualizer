@@ -47,13 +47,18 @@
   transition:
     background 0.12s ease,
     color 0.12s ease,
-    border-color 0.12s ease;
+    border-color 0.12s ease,
+    transform 0.08s ease;
 }
 
 .theme-toggle:hover {
   background: var(--gridline);
   color: var(--text-primary);
   border-color: var(--border-strong);
+}
+
+.theme-toggle:active {
+  transform: scale(0.92);
 }
 
 .app-body {
