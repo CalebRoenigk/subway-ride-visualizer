@@ -50,13 +50,15 @@ export function RiddenByYard({
         <div className="yard-list">
           {rows.map((row) => (
             <div className="yard-row" key={row.yard}>
-              <span className="yard-label">{row.yard}</span>
+              <div className="yard-row-top">
+                <span className="yard-label">{row.yard}</span>
+                <span className="yard-count tabular">
+                  {row.riddenCount}/{row.total}
+                </span>
+              </div>
               <div className="yard-track">
                 <div className="yard-fill" style={{ width: `${row.pct}%` }} />
               </div>
-              <span className="yard-count tabular">
-                {row.riddenCount}/{row.total}
-              </span>
             </div>
           ))}
         </div>
