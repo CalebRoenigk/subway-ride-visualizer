@@ -26,7 +26,7 @@ export function LineMonthHeatmap({
     <div className="lmh-wrap">
       <div
         className="lmh-grid"
-        style={{ gridTemplateColumns: `32px repeat(${buckets.length}, minmax(14px, 1fr))` }}
+        style={{ gridTemplateColumns: `32px repeat(${buckets.length}, minmax(0, 1fr))` }}
       >
         <div className="lmh-corner" aria-hidden="true" />
         {buckets.map((bucket, i) => {
