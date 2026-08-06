@@ -54,7 +54,7 @@ export function TopBar() {
         <span className="top-bar-icon">
           <TrainIcon />
         </span>
-        <span className="top-bar-title">Home</span>
+        <span className="top-bar-title">Rides Visualizer</span>
       </div>
       <button
         type="button"
