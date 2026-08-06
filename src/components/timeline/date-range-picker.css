@@ -119,9 +119,8 @@
   color: var(--text-secondary);
   background: transparent;
   border: none;
-  border-left: 3px solid transparent;
   border-radius: 8px;
-  padding: 9px 10px 9px 9px;
+  padding: 9px 10px;
   cursor: pointer;
   white-space: nowrap;
   transition:
@@ -136,7 +135,6 @@
 
 .range-picker-preset.is-active {
   background: var(--surface-1);
-  border-left-color: var(--text-primary);
   color: var(--text-primary);
   font-weight: 600;
 }
