@@ -1,13 +1,13 @@
 {
-  "cursor": "2026-08-31T23:33:31.000Z",
+  "cursor": "2026-09-01T23:11:00.000Z",
   "recordIdsAtCursor": [
-    "recjJdLLOLTMrg4FF"
+    "recJlxI2ZSGzUNBvv"
   ],
-  "lastRunAt": "2026-09-01T15:24:55.195Z",
+  "lastRunAt": "2026-09-02T15:00:56.155Z",
   "lastRun": {
     "mode": "incremental",
-    "fetched": 3,
-    "appended": 2,
+    "fetched": 4,
+    "appended": 3,
     "skippedIncomplete": 0,
     "skippedAlreadySynced": 1
   }
