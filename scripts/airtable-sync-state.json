@@ -1,9 +1,9 @@
 {
-  "cursor": "2026-10-13T17:32:20.000Z",
+  "cursor": "2026-10-14T01:10:42.000Z",
   "recordIdsAtCursor": [
-    "recJxSEI7QQyg6jER"
+    "recx1QhumJtjc8iYG"
   ],
-  "lastRunAt": "2026-10-13T18:02:15.904Z",
+  "lastRunAt": "2026-10-14T15:44:11.243Z",
   "lastRun": {
     "mode": "incremental",
     "fetched": 5,
