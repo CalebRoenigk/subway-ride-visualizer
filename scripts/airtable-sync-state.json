@@ -3,11 +3,11 @@
   "recordIdsAtCursor": [
     "recYcSSaAb9haV0Mn"
   ],
-  "lastRunAt": "2026-10-21T15:51:47.089Z",
+  "lastRunAt": "2026-10-22T15:48:34.380Z",
   "lastRun": {
     "mode": "incremental",
-    "fetched": 3,
-    "appended": 2,
+    "fetched": 1,
+    "appended": 0,
     "skippedIncomplete": 0,
     "skippedAlreadySynced": 1
   }
